@@ -14,7 +14,7 @@ public class BaseRepository<T> : IRepository<T> where T : BaseEntity
         _collection = database.GetCollection<T>(collectionName);
     }
 
-    public virtual async Task<T?> GetByIdAsync(string id)
+    public virtual async Task<T?> GetByIdAsync(Guid id)
     {
         var filter = Builders<T>.Filter.Eq("_id", id);
         return await _collection.Find(filter).FirstOrDefaultAsync();
@@ -44,25 +44,34 @@ public class BaseRepository<T> : IRepository<T> where T : BaseEntity
         await _collection.ReplaceOneAsync(filter, entity);
     }
 
-    public virtual async Task DeleteAsync(string id)
+    public virtual async Task DeleteAsync(Guid id)
     {
         var filter = Builders<T>.Filter.Eq("_id", id);
         await _collection.DeleteOneAsync(filter);
     }
 
-    public virtual async Task<bool> ExistsAsync(string id)
+    public virtual async Task<bool> ExistsAsync(Guid id)
     {
         var filter = Builders<T>.Filter.Eq("_id", id);
         return await _collection.Find(filter).AnyAsync();
     }
 
-    private string GetIdValue(T entity)
+    private Guid GetIdValue(T entity)
     {
         var property = typeof(T).GetProperty("Id");
         if (property == null)
             throw new InvalidOperationException("Entity must have an Id property");
 
-        return property.GetValue(entity)?.ToString() ??
-               throw new InvalidOperationException("Entity Id cannot be null");
+        var value = property.GetValue(entity);
+        if (value == null)
+            throw new InvalidOperationException("Entity Id cannot be null");
+        
+        if (value is Guid guidValue)
+            return guidValue;
+        
+        if (Guid.TryParse(value.ToString(), out Guid parsedGuid))
+            return parsedGuid;
+        
+        throw new InvalidOperationException($"Cannot convert Id value '{value}' to Guid");
     }
 }
