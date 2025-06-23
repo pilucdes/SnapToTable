@@ -15,8 +15,8 @@ public class CreateRecipeAnalysisRequestCommandValidator : AbstractValidator<Cre
 
         RuleFor(x => x.Images)
             .NotEmpty().WithMessage("At least one image is required.")
-            .Must(images => images.Count <= 5)
-            .WithMessage("A maximum of 5 images can be uploaded at a time.");
+            .Must(images => images.Count <= 2)
+            .WithMessage("A maximum of 2 images can be uploaded at a time.");
         
         RuleForEach(x => x.Images)
             .SetValidator(new ImageInputValidator());

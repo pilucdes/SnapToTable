@@ -2,5 +2,12 @@
 
 public record RecipeAnalysisRequest(
     string Name,
-    IReadOnlyList<string> ImageUrls
+    string Category,
+    TimeSpan? PrepTime,
+    TimeSpan? CookTime,
+    TimeSpan? AdditionalTime,
+    int? Servings,
+    IReadOnlyList<string> Ingredients,
+    IReadOnlyList<string> Directions,
+    IReadOnlyList<string> Notes
 ) : BaseEntity;

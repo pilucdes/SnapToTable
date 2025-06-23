@@ -4,16 +4,18 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <UserSecretsId>bd2f4a03-d30c-4af8-8172-88f177386a2a</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Betalgo.Ranul.OpenAI" Version="9.0.4" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.5" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.5" />
     <PackageReference Include="MongoDB.Driver" Version="3.1.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SnapToTable.Domain\SnapToTable.Domain.csproj" />
+    <ProjectReference Include="..\SnapToTable.Application\SnapToTable.Application.csproj" />
   </ItemGroup>
 
 </Project>

@@ -5,6 +5,9 @@ using MongoDB.Driver;
 using SnapToTable.Domain.Repositories;
 using SnapToTable.Infrastructure.Data.Configuration;
 using SnapToTable.Infrastructure.Repositories;
+using SnapToTable.Application.Contracts;
+using SnapToTable.Infrastructure.Extensions;
+using SnapToTable.Infrastructure.Services;
 
 namespace SnapToTable.Infrastructure;
 
@@ -14,11 +17,11 @@ public static class ServiceRegistration
         this IServiceCollection services,
         IConfiguration configuration)
     {
- 
-        services.Configure<MongoDbSettings>(configuration.GetSection("MongoDbSettings"));
+        services.AddOpenAiServices(configuration);
         
-        services.AddSingleton(sp =>sp.GetRequiredService<IOptions<MongoDbSettings>>().Value);
- 
+        services.Configure<MongoDbSettings>(configuration.GetSection("MongoDbSettings"));
+        services.AddSingleton(sp => sp.GetRequiredService<IOptions<MongoDbSettings>>().Value);
+
         services.AddSingleton<IMongoClient>(sp =>
         {
             var settings = sp.GetRequiredService<MongoDbSettings>();
@@ -34,7 +37,8 @@ public static class ServiceRegistration
 
         services.AddScoped<IRecipeRepository, RecipeRepository>();
         services.AddScoped<IRecipeAnalysisRequestRepository, RecipeAnalysisRequestRepository>();
+        services.AddScoped<IRecipeExtractionService, RecipeExtractionService>();
 
         return services;
     }
-} 
+}
