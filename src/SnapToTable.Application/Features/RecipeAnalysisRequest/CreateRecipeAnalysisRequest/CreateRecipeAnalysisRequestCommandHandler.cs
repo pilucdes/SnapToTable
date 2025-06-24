@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using SnapToTable.Application.Contracts;
+using SnapToTable.Domain.Entities;
 using SnapToTable.Domain.Repositories;
 
 // using SnapToTable.Domain.Repositories;
@@ -9,23 +10,21 @@ namespace SnapToTable.Application.Features.RecipeAnalysisRequest.CreateRecipeAna
 public class CreateRecipeAnalysisRequestCommandHandler : IRequestHandler<CreateRecipeAnalysisRequestCommand, Guid>
 {
     private readonly IRecipeAnalysisRequestRepository _repository;
-    private readonly IRecipeExtractionService _extractionService;
+    private readonly IAiRecipeExtractionService _aiRecipeExtractionService;
 
     public CreateRecipeAnalysisRequestCommandHandler(IRecipeAnalysisRequestRepository repository,
-        IRecipeExtractionService extractionService)
+        IAiRecipeExtractionService aiRecipeExtractionService)
     {
         _repository = repository;
-        _extractionService = extractionService;
+        _aiRecipeExtractionService = aiRecipeExtractionService;
     }
 
     public async Task<Guid> Handle(CreateRecipeAnalysisRequestCommand request, CancellationToken cancellationToken)
     {
-        var extractedRecipes = await _extractionService.GetRecipeFromImagesAsync(request.Images, cancellationToken);
+        var extractedRecipes = await _aiRecipeExtractionService.GetRecipeFromImagesAsync(request.Images, cancellationToken);
 
-        foreach (var recipe in extractedRecipes)
-        {
-            var newAnalysis = new Domain.Entities.RecipeAnalysisRequest(
-                recipe.Name,
+        var newAnalysis = new Domain.Entities.RecipeAnalysisRequest(extractedRecipes.Select(recipe =>
+            new Recipe(recipe.Name,
                 recipe.Category,
                 recipe.PrepTime,
                 recipe.CookTime,
@@ -33,12 +32,9 @@ public class CreateRecipeAnalysisRequestCommandHandler : IRequestHandler<CreateR
                 recipe.Servings,
                 recipe.Ingredients,
                 recipe.Directions,
-                recipe.Notes
-            );
+                recipe.Notes)).ToList());
 
-            await _repository.AddAsync(newAnalysis);
-        }
-
-        return Guid.CreateVersion7();
+        await _repository.AddAsync(newAnalysis);
+        return newAnalysis.Id;
     }
 }

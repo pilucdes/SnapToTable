@@ -16,9 +16,7 @@ public class RecipeAnalysisController : ApiBaseController
     [Consumes("multipart/form-data")]
     public async Task<IActionResult> CreateAnalysis([FromForm] CreateRecipeAnalysisRequest request)
     {
-        // Map from the API model to the clean Application command
         var command = new CreateRecipeAnalysisRequestCommand(
-            request.Name,
             request.Images.Select(img => new ImageInput(
                 img.OpenReadStream(),
                 img.ContentType

@@ -18,6 +18,6 @@ public class ImageInputValidator : AbstractValidator<ImageInput>
         RuleFor(x => x.ContentType)
             .NotEmpty()
             .Must(contentType => FileValidationConstants.ValidImageTypes.Contains(contentType))
-            .WithMessage("File must be a valid image type ('image/jpeg', 'image/png').");
+            .WithMessage("File must be a valid image type ('image/jpeg', 'image/png', 'image/webp').");
     }
 }

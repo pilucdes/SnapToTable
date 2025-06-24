@@ -34,10 +34,9 @@ public static class ServiceRegistration
             var settings = sp.GetRequiredService<MongoDbSettings>();
             return client.GetDatabase(settings.DatabaseName);
         });
-
-        services.AddScoped<IRecipeRepository, RecipeRepository>();
+        
         services.AddScoped<IRecipeAnalysisRequestRepository, RecipeAnalysisRequestRepository>();
-        services.AddScoped<IRecipeExtractionService, RecipeExtractionService>();
+        services.AddScoped<IAiRecipeExtractionService, AiRecipeExtractionService>();
 
         return services;
     }

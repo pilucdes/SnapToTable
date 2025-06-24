@@ -7,12 +7,6 @@ public class CreateRecipeAnalysisRequestCommandValidator : AbstractValidator<Cre
 {
     public CreateRecipeAnalysisRequestCommandValidator()
     {
-        RuleFor(x => x.Name)
-            .NotEmpty()
-            .WithMessage("Recipe name is required")
-            .MaximumLength(200)
-            .WithMessage("Recipe name must not exceed 200 characters");
-
         RuleFor(x => x.Images)
             .NotEmpty().WithMessage("At least one image is required.")
             .Must(images => images.Count <= 2)
