@@ -6,10 +6,10 @@ namespace SnapToTable.Infrastructure.IntegrationTests;
 
 public class BaseTest : IDisposable
 {
-    public IMongoDatabase Database;
-    private MongoDbRunner _runner;
+    protected readonly IMongoDatabase Database;
+    private readonly MongoDbRunner _runner;
 
-    public BaseTest()
+    protected BaseTest()
     {
         _runner = MongoDbRunner.Start();
         var setting = new MongoDbSettings()

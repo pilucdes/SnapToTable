@@ -8,12 +8,12 @@ public class ImageInputValidator : AbstractValidator<ImageInput>
 {
     public ImageInputValidator()
     {
-        RuleFor(x => x.Content)
-            .NotNull().WithMessage("Image stream cannot be null.");
+        RuleFor(x => x.Content.Length)
+            .GreaterThan(0).WithMessage("Image stream cannot be empty.");
 
         RuleFor(x => x.Content.Length)
             .LessThanOrEqualTo(FileValidationConstants.MaxImageSizeInBytes)
-            .WithMessage($"Image size cannot exceed {FileValidationConstants.MaxImageSizeInBytes / 1024 / 1024}MB.");
+            .WithMessage($"Image size cannot exceed {FileValidationConstants.MaxImageSizeInMegabytes}MB.");
 
         RuleFor(x => x.ContentType)
             .NotEmpty()
