@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using Scalar.AspNetCore;
 using SnapToTable.Application.Features.RecipeAnalysisRequest.CreateRecipeAnalysisRequest;
 using SnapToTable.Infrastructure;
@@ -9,6 +10,12 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<CreateRecipeAnalysisRequestCommand>());
 builder.Services.AddInfrastructure(configuration);
+builder.Services.AddApiVersioning(opt =>
+{
+    opt.AssumeDefaultVersionWhenUnspecified = true;
+    opt.DefaultApiVersion = new ApiVersion(1);
+    opt.ReportApiVersions = true;
+});
 
 var app = builder.Build();
 
@@ -23,3 +30,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program;

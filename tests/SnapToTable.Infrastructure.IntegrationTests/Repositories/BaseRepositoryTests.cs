@@ -1,6 +1,5 @@
 ﻿using MongoDB.Driver;
 using Shouldly;
-using SnapToTable.Infrastructure.Data.Configuration;
 using SnapToTable.Infrastructure.IntegrationTests.Models;
 using SnapToTable.Infrastructure.Repositories;
 using Xunit;

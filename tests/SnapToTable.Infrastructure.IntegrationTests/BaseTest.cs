@@ -1,20 +1,26 @@
-﻿using Mongo2Go;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 using SnapToTable.Infrastructure.Data.Configuration;
+using Testcontainers.MongoDb;
+using Xunit;
 
 namespace SnapToTable.Infrastructure.IntegrationTests;
 
-public class BaseTest : IDisposable
+public class BaseTest : IAsyncLifetime
 {
-    protected readonly IMongoDatabase Database;
-    private readonly MongoDbRunner _runner;
+    protected IMongoDatabase Database = null!;
+    private readonly MongoDbContainer _mongoDbContainer;
 
     protected BaseTest()
     {
-        _runner = MongoDbRunner.Start();
+        _mongoDbContainer = new MongoDbBuilder().Build();
+    }
+
+    public async Task InitializeAsync()
+    {
+        await _mongoDbContainer.StartAsync();
         var setting = new MongoDbSettings()
         {
-            ConnectionString = _runner.ConnectionString,
+            ConnectionString = _mongoDbContainer.GetConnectionString(),
             UseTls = false,
             DatabaseName = Guid.NewGuid().ToString()
         };
@@ -23,8 +29,9 @@ public class BaseTest : IDisposable
         Database = mongoClient.GetDatabase(setting.DatabaseName);
     }
 
-    public void Dispose()
+    public async Task DisposeAsync()
     {
-        _runner.Dispose();
+        await _mongoDbContainer.StopAsync();
+        await _mongoDbContainer.DisposeAsync();
     }
 }
