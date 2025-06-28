@@ -29,8 +29,7 @@ public class AiRecipeExtractionService : IAiRecipeExtractionService
     {
         var request = await BuildChatCompletionCreateRequestAsync(images, cancellationToken);
         var rawRecipes = await GetRawRecipesFromApiAsync(request, cancellationToken);
-
-
+        
         return rawRecipes.Recipes.Length == 0 ? [] : rawRecipes.Recipes.Select(RecipeMapper.ToExtractionResult).ToArray();
     }
 
@@ -66,6 +65,7 @@ public class AiRecipeExtractionService : IAiRecipeExtractionService
             new ChatMessage(StaticValues.ChatMessageRoles.System, _options.Value.RecipeExtractionPrompt);
 
         var userMessageContent = new List<MessageContent>();
+        
         foreach (var image in images)
         {
             userMessageContent.Add(await CreateImageMessageContentAsync(image, cancellationToken));

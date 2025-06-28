@@ -65,6 +65,7 @@ BenchmarkDotNet.Artifacts/
 project.lock.json
 project.fragment.lock.json
 artifacts/
+*.ps1
 
 # Tye
 .tye/

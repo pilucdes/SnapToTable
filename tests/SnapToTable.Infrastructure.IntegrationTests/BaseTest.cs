@@ -1,37 +1,28 @@
 ﻿using MongoDB.Driver;
-using SnapToTable.Infrastructure.Data.Configuration;
-using Testcontainers.MongoDb;
+using SnapToTable.Infrastructure.IntegrationTests.Constants;
+using SnapToTable.Infrastructure.IntegrationTests.Fixtures;
 using Xunit;
 
-namespace SnapToTable.Infrastructure.IntegrationTests;
+[CollectionDefinition(TestCollectionNames.MongoDbCollection)]
+public class MongoDbCollection : ICollectionFixture<FixtureBaseTest>;
 
-public class BaseTest : IAsyncLifetime
+[Collection(TestCollectionNames.MongoDbCollection)]
+public abstract class BaseTest : IAsyncLifetime
 {
-    protected IMongoDatabase Database = null!;
-    private readonly MongoDbContainer _mongoDbContainer;
+    private readonly IMongoClient _mongoClient;
+    protected readonly IMongoDatabase Database;
+    protected readonly string DatabaseName;
 
-    protected BaseTest()
+    protected BaseTest(FixtureBaseTest fixture)
     {
-        _mongoDbContainer = new MongoDbBuilder().Build();
+        _mongoClient = fixture.MongoClient;
+        DatabaseName = $"test_db_{Guid.NewGuid()}";
+        Database = _mongoClient.GetDatabase(DatabaseName);
     }
-
-    public async Task InitializeAsync()
-    {
-        await _mongoDbContainer.StartAsync();
-        var setting = new MongoDbSettings()
-        {
-            ConnectionString = _mongoDbContainer.GetConnectionString(),
-            UseTls = false,
-            DatabaseName = Guid.NewGuid().ToString()
-        };
-
-        IMongoClient mongoClient = MongoClientConfiguration.CreateClient(setting);
-        Database = mongoClient.GetDatabase(setting.DatabaseName);
-    }
+    public Task InitializeAsync() => Task.CompletedTask;
 
     public async Task DisposeAsync()
     {
-        await _mongoDbContainer.StopAsync();
-        await _mongoDbContainer.DisposeAsync();
+        await _mongoClient.DropDatabaseAsync(DatabaseName);
     }
 }

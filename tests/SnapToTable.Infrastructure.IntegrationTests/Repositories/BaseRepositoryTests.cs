@@ -1,5 +1,6 @@
 ﻿using MongoDB.Driver;
 using Shouldly;
+using SnapToTable.Infrastructure.IntegrationTests.Fixtures;
 using SnapToTable.Infrastructure.IntegrationTests.Models;
 using SnapToTable.Infrastructure.Repositories;
 using Xunit;
@@ -8,6 +9,10 @@ namespace SnapToTable.Infrastructure.IntegrationTests.Repositories;
 
 public class BaseRepositoryTests : BaseTest
 {
+    public BaseRepositoryTests(FixtureBaseTest fixture) : base(fixture)
+    {
+    }
+
     [Fact]
     public async Task AddAsync_GivenNewEntity_ShouldAddNewEntity()
     {
