@@ -54,6 +54,7 @@ public class CreateRecipeAnalysisRequestCommandValidatorTests
         var images = Enumerable.Range(0, 3)
             .Select(_ => RecipeAnalysisDataFactory.CreateValidImageInput())
             .ToList();
+        
         var command = new CreateRecipeAnalysisRequestCommand(images);
 
         // Act
@@ -73,6 +74,7 @@ public class CreateRecipeAnalysisRequestCommandValidatorTests
         var images = Enumerable.Range(0, imageCount)
             .Select(_ => RecipeAnalysisDataFactory.CreateValidImageInput())
             .ToList();
+        
         var command = new CreateRecipeAnalysisRequestCommand(images);
 
         // Act

@@ -2,7 +2,7 @@ namespace SnapToTable.Infrastructure.DTOs;
 
 public class RawRecipesDto
 {
-    public RawRecipeDto[] Recipes { get; init; } = [];
+    public RawRecipeDto[] Recipes { get; set; } = [];
 } 
 public class RawRecipeDto
 {

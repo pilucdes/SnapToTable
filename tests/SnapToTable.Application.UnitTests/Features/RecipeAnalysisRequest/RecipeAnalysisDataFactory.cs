@@ -1,5 +1,6 @@
 ﻿using SnapToTable.Application.Constants;
 using SnapToTable.Application.DTOs;
+using SnapToTable.Application.Features.RecipeAnalysisRequest.CreateRecipeAnalysisRequest;
 
 namespace SnapToTable.Application.UnitTests.Features.RecipeAnalysisRequest;
 
@@ -14,8 +15,36 @@ public static class RecipeAnalysisDataFactory
     {
         return new ImageInput(CreateValidStream(), contentType);
     }
+
     public static ImageInput CreateEmptyStreamImageInput(string contentType = "image/jpeg")
     {
         return new ImageInput(CreateEmptyStream(), contentType);
+    }
+
+    public static List<RecipeExtractionResult> CreateRecipeExtractionResults()
+    {
+        return
+        [
+            new()
+            {
+                Name = "Test Chocolate Cake",
+                Category = "Dessert",
+                PrepTime = TimeSpan.FromMinutes(15),
+                CookTime = TimeSpan.FromMinutes(30),
+                AdditionalTime = TimeSpan.FromMinutes(10),
+                Servings = 8,
+                Ingredients = ["1 cup flour", "1 cup sugar"],
+                Directions = ["Mix ingredients", "Bake at 350F"],
+                Notes = ["Enjoy!"]
+            }
+        ];
+    }
+
+    public static CreateRecipeAnalysisRequestCommand CreateValidCommand()
+    {
+        return new CreateRecipeAnalysisRequestCommand(new List<ImageInput>
+        {
+            CreateValidImageInput()
+        });
     }
 }
