@@ -39,7 +39,7 @@ public class BaseRepository<T> : IRepository<T> where T : BaseEntity
 
     public virtual async Task UpdateAsync(T entity)
     {
-        var id = GetIdValue(entity);
+        var id = entity.Id;
         var filter = Builders<T>.Filter.Eq("_id", id);
         await _collection.ReplaceOneAsync(filter, entity);
     }
@@ -55,23 +55,5 @@ public class BaseRepository<T> : IRepository<T> where T : BaseEntity
         var filter = Builders<T>.Filter.Eq("_id", id);
         return await _collection.Find(filter).AnyAsync();
     }
-
-    private Guid GetIdValue(T entity)
-    {
-        var property = typeof(T).GetProperty("Id");
-        if (property == null)
-            throw new InvalidOperationException("Entity must have an Id property");
-
-        var value = property.GetValue(entity);
-        if (value == null)
-            throw new InvalidOperationException("Entity Id cannot be null");
-        
-        if (value is Guid guidValue)
-            return guidValue;
-        
-        if (Guid.TryParse(value.ToString(), out Guid parsedGuid))
-            return parsedGuid;
-        
-        throw new InvalidOperationException($"Cannot convert Id value '{value}' to Guid");
-    }
+    
 }
