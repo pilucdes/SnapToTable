@@ -28,12 +28,34 @@ public class AiRecipeExtractionService : IAiRecipeExtractionService
         CancellationToken cancellationToken)
     {
         var request = await BuildChatCompletionCreateRequestAsync(images, cancellationToken);
-        var rawRecipes = await GetRawRecipesFromApiAsync(request, cancellationToken);
-        
-        return rawRecipes.Recipes.Length == 0 ? [] : rawRecipes.Recipes.Select(RecipeMapper.ToExtractionResult).ToArray();
+        var contentJson = await FetchCompletionContentAsync(request, cancellationToken);
+        var rawRecipes = ParseRawRecipes(contentJson);
+
+        return rawRecipes.Recipes.Select(RecipeMapper.ToExtractionResult).ToArray();
+    }
+    
+    private async Task<ChatCompletionCreateRequest> BuildChatCompletionCreateRequestAsync(
+        IEnumerable<ImageInput> images,
+        CancellationToken cancellationToken)
+    {
+        var systemMessage =
+            new ChatMessage(StaticValues.ChatMessageRoles.System, _options.Value.RecipeExtractionPrompt);
+
+        var imageContentTasks = images.Select(image => CreateImageMessageContentAsync(image, cancellationToken));
+        var userMessageContent = await Task.WhenAll(imageContentTasks);
+
+        var userMessage = new ChatMessage(StaticValues.ChatMessageRoles.User, userMessageContent);
+
+        return new ChatCompletionCreateRequest
+        {
+            Messages = new List<ChatMessage> { systemMessage, userMessage },
+            Model = _options.Value.Model,
+            MaxTokens = _options.Value.Token,
+            ResponseFormat = new() { Type = OpenAiConstants.ResponseFormatJson }
+        };
     }
 
-    private async Task<RawRecipesDto> GetRawRecipesFromApiAsync(ChatCompletionCreateRequest request,
+    private async Task<string> FetchCompletionContentAsync(ChatCompletionCreateRequest request,
         CancellationToken cancellationToken)
     {
         var completion = await _client.ChatCompletion.CreateCompletion(request, cancellationToken: cancellationToken);
@@ -45,41 +67,29 @@ public class AiRecipeExtractionService : IAiRecipeExtractionService
         }
 
         var choice = completion.Choices.FirstOrDefault();
-        if (choice?.Message.Content is null)
+        if (string.IsNullOrWhiteSpace(choice?.Message.Content))
         {
             throw new OpenAiApiException("OpenAI response was successful but contained no content.");
         }
 
-        var rawRecipes =
-            JsonSerializer.Deserialize<RawRecipesDto>(choice.Message.Content, JsonSerializerConfiguration.Options);
-
-        return rawRecipes ?? throw new RecipeDeserializationException(
-            "Failed to deserialize the recipe from OpenAI response. The response might be null or malformed.");
+        return choice.Message.Content;
     }
 
-    private async Task<ChatCompletionCreateRequest> BuildChatCompletionCreateRequestAsync(
-        IEnumerable<ImageInput> images,
-        CancellationToken cancellationToken)
+    private RawRecipesDto ParseRawRecipes(string jsonContent)
     {
-        var systemMessage =
-            new ChatMessage(StaticValues.ChatMessageRoles.System, _options.Value.RecipeExtractionPrompt);
-
-        var userMessageContent = new List<MessageContent>();
-        
-        foreach (var image in images)
+        try
         {
-            userMessageContent.Add(await CreateImageMessageContentAsync(image, cancellationToken));
+            var rawRecipes =
+                JsonSerializer.Deserialize<RawRecipesDto>(jsonContent, JsonSerializerConfiguration.Options);
+
+            return rawRecipes ?? throw new RecipeDeserializationException(
+                "Failed to deserialize the recipe from OpenAI response. The JSON content resolved to null.");
         }
-
-        var userMessage = new ChatMessage(StaticValues.ChatMessageRoles.User, userMessageContent);
-
-        return new ChatCompletionCreateRequest
+        catch (JsonException)
         {
-            Messages = new List<ChatMessage> { systemMessage, userMessage },
-            Model = _options.Value.Model,
-            MaxTokens = _options.Value.Token,
-            ResponseFormat = new() { Type = OpenAiConstants.ResponseFormatJson }
-        };
+            throw new RecipeDeserializationException(
+                $"Failed to deserialize the recipe from OpenAI response. The JSON was malformed. Content: {jsonContent}");
+        }
     }
 
     private static async Task<MessageContent> CreateImageMessageContentAsync(
