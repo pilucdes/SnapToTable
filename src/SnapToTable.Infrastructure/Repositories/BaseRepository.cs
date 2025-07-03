@@ -1,7 +1,9 @@
 using System.Linq.Expressions;
 using MongoDB.Driver;
+using SnapToTable.Domain.Common;
 using SnapToTable.Domain.Entities;
 using SnapToTable.Domain.Repositories;
+using SortDirection = SnapToTable.Domain.Common.SortDirection;
 
 namespace SnapToTable.Infrastructure.Repositories;
 
@@ -25,15 +27,9 @@ public class BaseRepository<T> : IRepository<T> where T : BaseEntity
         return await _collection.Find(Builders<T>.Filter.Empty).ToListAsync();
     }
 
-    public virtual async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
-    {
-        return await _collection.Find(predicate).ToListAsync();
-    }
-
     public virtual async Task AddAsync(T entity)
     {
         entity.CreatedAt = DateTime.UtcNow;
-        entity.Id = Guid.CreateVersion7();
         await _collection.InsertOneAsync(entity);
     }
 
@@ -50,10 +46,50 @@ public class BaseRepository<T> : IRepository<T> where T : BaseEntity
         await _collection.DeleteOneAsync(filter);
     }
 
-    public virtual async Task<bool> ExistsAsync(Guid id)
+    public async Task<PagedResult<T>> GetPagedAsync(int pageNumber, int pageSize,
+        Expression<Func<T, bool>>? filter = null,
+        params SortDescriptor<T>[]? sortOrder)
     {
-        var filter = Builders<T>.Filter.Eq("_id", id);
-        return await _collection.Find(filter).AnyAsync();
+        return await GetPagedAsync(pageNumber, pageSize, p => p, filter, sortOrder);
     }
-    
+
+    public async Task<PagedResult<TProjection>> GetPagedAsync<TProjection>(int pageNumber, int pageSize,
+        Expression<Func<T, TProjection>> projection, Expression<Func<T, bool>>? filter = null,
+        params SortDescriptor<T>[]? sortOrder)
+    {
+        var finalFilter = filter ?? Builders<T>.Filter.Empty;
+        var totalCount = await _collection.CountDocumentsAsync(finalFilter);
+        var findFluent = _collection.Find(finalFilter);
+        
+        var finalSort = GetSortDefinition(sortOrder);
+
+        var items = await findFluent
+            .Sort(finalSort)
+            .Skip((pageNumber - 1) * pageSize)
+            .Limit(pageSize)
+            .Project(projection)
+            .ToListAsync();
+
+        return new PagedResult<TProjection>(items, totalCount, pageNumber, pageSize);
+    }
+
+    private static SortDefinition<T> GetSortDefinition(SortDescriptor<T>[]? sortOrder)
+    {
+        SortDefinition<T> finalSort;
+        if (sortOrder is not null && sortOrder.Length > 0)
+        {
+            var sortBuilder = Builders<T>.Sort;
+            var sortDefinitions = sortOrder.Select(sd => sd.Direction == SortDirection.Ascending
+                ? sortBuilder.Ascending(sd.KeySelector)
+                : sortBuilder.Descending(sd.KeySelector));
+
+            finalSort = sortBuilder.Combine(sortDefinitions);
+        }
+        else
+        {
+            finalSort = Builders<T>.Sort.Descending(e => e.Id);
+        }
+
+        return finalSort;
+    }
 }

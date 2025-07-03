@@ -1,14 +1,23 @@
 using System.Linq.Expressions;
+using SnapToTable.Domain.Common;
 
 namespace SnapToTable.Domain.Repositories;
 
 public interface IRepository<T> where T : class
 {
     Task<T?> GetByIdAsync(Guid id);
-    Task<IEnumerable<T>> GetAllAsync();
-    Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);
     Task AddAsync(T entity);
     Task UpdateAsync(T entity);
     Task DeleteAsync(Guid id);
-    Task<bool> ExistsAsync(Guid id);
-} 
+    Task<PagedResult<T>> GetPagedAsync(
+        int pageNumber,
+        int pageSize,
+        Expression<Func<T, bool>>? filter = null,
+        params SortDescriptor<T>[]? sortOrder);
+    Task<PagedResult<TProjection>> GetPagedAsync<TProjection>(
+        int pageNumber,
+        int pageSize,
+        Expression<Func<T, TProjection>> projection,
+        Expression<Func<T, bool>>? filter = null,
+        params SortDescriptor<T>[]? sortOrder);
+}
