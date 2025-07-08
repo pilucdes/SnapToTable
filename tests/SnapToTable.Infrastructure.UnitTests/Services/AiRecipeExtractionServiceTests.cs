@@ -31,7 +31,7 @@ public class AiRecipeExtractionServiceTests
     public async Task GetRecipeFromImagesAsync_WithValidInputAndSuccessfulApiResponse_ShouldReturnMappedRecipes()
     {
         // Arrange
-        var imageInputs = new List<ImageInput> { AiRecipeExtractionDataFactory.CreateImageInput([1, 2, 3]) };
+        var imageInputs = new List<ImageInputDto> { AiRecipeExtractionDataFactory.CreateImageInput([1, 2, 3]) };
         var validJson = AiRecipeExtractionDataFactory.CreateValidRecipesJson();
 
         var apiResponse = new ChatCompletionCreateResponse
@@ -79,7 +79,7 @@ public class AiRecipeExtractionServiceTests
     public async Task GetRecipeFromImagesAsync_WhenApiCallFails_ShouldThrowOpenAiApiException()
     {
         // Arrange
-        var imageInputs = new List<ImageInput> { AiRecipeExtractionDataFactory.CreateImageInput([1, 2, 3]) };
+        var imageInputs = new List<ImageInputDto> { AiRecipeExtractionDataFactory.CreateImageInput([1, 2, 3]) };
 
         var failedResponse = new ChatCompletionCreateResponse
         {
@@ -102,7 +102,7 @@ public class AiRecipeExtractionServiceTests
     public async Task GetRecipeFromImagesAsync_WhenApiResponseHasNoContent_ShouldThrowOpenAiApiException()
     {
         // Arrange
-        var imageInputs = new List<ImageInput> { AiRecipeExtractionDataFactory.CreateImageInput([1, 2, 3]) };
+        var imageInputs = new List<ImageInputDto> { AiRecipeExtractionDataFactory.CreateImageInput([1, 2, 3]) };
 
         // Setup a successful response but with null content
         var successWithNoContent = new ChatCompletionCreateResponse
@@ -127,7 +127,7 @@ public class AiRecipeExtractionServiceTests
         GetRecipeFromImagesAsync_WhenApiResponseIsMalformedJson_ShouldThrowRecipeDeserializationException()
     {
         // Arrange
-        var imageInputs = new List<ImageInput> { AiRecipeExtractionDataFactory.CreateImageInput([1, 2, 3]) };
+        var imageInputs = new List<ImageInputDto> { AiRecipeExtractionDataFactory.CreateImageInput([1, 2, 3]) };
         var malformedJson = "{\"recipes\":[{\"name\":\"Test Cake\""; // Missing closing brackets
 
         var apiResponse = new ChatCompletionCreateResponse
@@ -152,7 +152,7 @@ public class AiRecipeExtractionServiceTests
     public async Task GetRecipeFromImagesAsync_WhenApiResponseIsNull_ShouldThrowRecipeDeserializationException()
     {
         // Arrange
-        var imageInputs = new List<ImageInput> { AiRecipeExtractionDataFactory.CreateImageInput([1, 2, 3]) };
+        var imageInputs = new List<ImageInputDto> { AiRecipeExtractionDataFactory.CreateImageInput([1, 2, 3]) };
         const string nullJson = "null";
 
         var apiResponse = new ChatCompletionCreateResponse

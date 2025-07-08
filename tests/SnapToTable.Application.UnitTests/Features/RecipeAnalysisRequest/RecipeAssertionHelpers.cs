@@ -6,7 +6,7 @@ namespace SnapToTable.Application.UnitTests.Features.RecipeAnalysisRequest;
 
 public static class RecipeAssertionHelpers
 {
-    public static void ShouldMatch(this Recipe entity, RecipeExtractionResult dto)
+    public static void ShouldMatch(this Recipe entity, RecipeExtractionResultDto dto)
     {
         entity.ShouldNotBeNull();
         dto.ShouldNotBeNull();

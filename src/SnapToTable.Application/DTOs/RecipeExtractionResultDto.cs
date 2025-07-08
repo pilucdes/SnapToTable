@@ -1,6 +1,6 @@
 namespace SnapToTable.Application.DTOs;
 
-public class RecipeExtractionResult
+public class RecipeExtractionResultDto
 {
     public string Name { get; set; } = string.Empty;
     public string Category { get; set; } = string.Empty;

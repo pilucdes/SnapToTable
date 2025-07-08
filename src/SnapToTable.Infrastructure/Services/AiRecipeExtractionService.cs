@@ -24,7 +24,7 @@ public class AiRecipeExtractionService : IAiRecipeExtractionService
         _options = options;
     }
 
-    public async Task<IReadOnlyList<RecipeExtractionResult>> GetRecipeFromImagesAsync(IEnumerable<ImageInput> images,
+    public async Task<IReadOnlyList<RecipeExtractionResultDto>> GetRecipeFromImagesAsync(IEnumerable<ImageInputDto> images,
         CancellationToken cancellationToken)
     {
         var request = await BuildChatCompletionCreateRequestAsync(images, cancellationToken);
@@ -35,7 +35,7 @@ public class AiRecipeExtractionService : IAiRecipeExtractionService
     }
     
     private async Task<ChatCompletionCreateRequest> BuildChatCompletionCreateRequestAsync(
-        IEnumerable<ImageInput> images,
+        IEnumerable<ImageInputDto> images,
         CancellationToken cancellationToken)
     {
         var systemMessage =
@@ -93,10 +93,10 @@ public class AiRecipeExtractionService : IAiRecipeExtractionService
     }
 
     private static async Task<MessageContent> CreateImageMessageContentAsync(
-        ImageInput imageInput, CancellationToken cancellationToken)
+        ImageInputDto imageInputDto, CancellationToken cancellationToken)
     {
         using var memoryStream = new MemoryStream();
-        await imageInput.Content.CopyToAsync(memoryStream, cancellationToken);
+        await imageInputDto.Content.CopyToAsync(memoryStream, cancellationToken);
         var base64Image = Convert.ToBase64String(memoryStream.ToArray());
 
         return new MessageContent
@@ -104,7 +104,7 @@ public class AiRecipeExtractionService : IAiRecipeExtractionService
             Type = OpenAiConstants.ContentTypeImageUrl,
             ImageUrl = new MessageImageUrl
             {
-                Url = $"data:{imageInput.ContentType};base64,{base64Image}"
+                Url = $"data:{imageInputDto.ContentType};base64,{base64Image}"
             }
         };
     }

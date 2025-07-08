@@ -3,6 +3,7 @@ using System.Text.Json;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using SnapToTable.API.Extensions;
+using SnapToTable.Application.Exceptions;
 
 namespace SnapToTable.API.Middlewares;
 
@@ -56,12 +57,23 @@ public class GlobalErrorHandler
                         g => g.Select(e => e.ErrorMessage).ToArray()
                     );
                 break;
-
+            case NotFoundException notFoundException:
+                problemDetails.Status = (int)HttpStatusCode.NotFound;
+                problemDetails.Title = "The requested resource was not found.";
+                problemDetails.Type = "https://httpstatuses.com/404";
+                problemDetails.Detail = notFoundException.Message;
+                break;
+            case ApplicationException applicationException:
+                problemDetails.Status = (int)HttpStatusCode.BadRequest;
+                problemDetails.Title = "One or more application errors occurred.";
+                problemDetails.Type = "https://httpstatuses.com/400";
+                problemDetails.Detail = applicationException.Message;
+                break;
             default:
                 problemDetails.Detail = "An unexpected error occurred. Please try again later.";
                 break;
         }
-        
+
         if (_env.IsDevelopment())
         {
             problemDetails.Extensions["exceptionType"] = exception.GetType().Name;
@@ -75,7 +87,7 @@ public class GlobalErrorHandler
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         });
-        
+
         await context.Response.WriteAsync(json);
     }
 }

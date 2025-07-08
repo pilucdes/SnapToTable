@@ -11,17 +11,17 @@ public static class RecipeAnalysisDataFactory
     public static Stream CreateEmptyStream() => CreateStream(0);
     public static Stream CreateOversizedStream() => CreateStream(FileValidationConstants.MaxImageSizeInBytes + 1);
 
-    public static ImageInput CreateValidImageInput(string contentType = "image/jpeg")
+    public static ImageInputDto CreateValidImageInput(string contentType = "image/jpeg")
     {
-        return new ImageInput(CreateValidStream(), contentType);
+        return new ImageInputDto(CreateValidStream(), contentType);
     }
 
-    public static ImageInput CreateEmptyStreamImageInput(string contentType = "image/jpeg")
+    public static ImageInputDto CreateEmptyStreamImageInput(string contentType = "image/jpeg")
     {
-        return new ImageInput(CreateEmptyStream(), contentType);
+        return new ImageInputDto(CreateEmptyStream(), contentType);
     }
 
-    public static List<RecipeExtractionResult> CreateRecipeExtractionResults()
+    public static List<RecipeExtractionResultDto> CreateRecipeExtractionResults()
     {
         return
         [
@@ -42,7 +42,7 @@ public static class RecipeAnalysisDataFactory
 
     public static CreateRecipeAnalysisRequestCommand CreateValidCommand()
     {
-        return new CreateRecipeAnalysisRequestCommand(new List<ImageInput>
+        return new CreateRecipeAnalysisRequestCommand(new List<ImageInputDto>
         {
             CreateValidImageInput()
         });

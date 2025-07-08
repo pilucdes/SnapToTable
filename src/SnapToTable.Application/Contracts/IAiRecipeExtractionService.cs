@@ -4,5 +4,5 @@ namespace SnapToTable.Application.Contracts;
 
 public interface IAiRecipeExtractionService
 {
-    Task<IReadOnlyList<RecipeExtractionResult>> GetRecipeFromImagesAsync(IEnumerable<ImageInput> images, CancellationToken cancellationToken);
+    Task<IReadOnlyList<RecipeExtractionResultDto>> GetRecipeFromImagesAsync(IEnumerable<ImageInputDto> images, CancellationToken cancellationToken);
 } 

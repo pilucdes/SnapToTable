@@ -1,5 +1,5 @@
 ﻿namespace SnapToTable.API.DTOs;
 
-public record CreateRecipeAnalysisRequest(
+public record CreateRecipeAnalysisRequestDto(
     IReadOnlyList<IFormFile> Images
 );

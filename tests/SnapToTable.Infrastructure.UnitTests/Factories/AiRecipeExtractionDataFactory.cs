@@ -13,7 +13,7 @@ public static class AiRecipeExtractionDataFactory
         ApiKey = "ABC"
     };
 
-    public static ImageInput CreateImageInput(byte[] content, string contentType = "image/jpeg") =>
+    public static ImageInputDto CreateImageInput(byte[] content, string contentType = "image/jpeg") =>
         new(new MemoryStream(content), contentType);
 
     public static string CreateValidRecipesJson() =>

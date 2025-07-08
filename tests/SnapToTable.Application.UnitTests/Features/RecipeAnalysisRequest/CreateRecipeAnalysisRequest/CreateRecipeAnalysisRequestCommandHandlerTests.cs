@@ -51,7 +51,7 @@ public class CreateRecipeAnalysisRequestCommandHandlerTests
         var aiResult = RecipeAnalysisDataFactory.CreateRecipeExtractionResults();
 
         _aiServiceMock
-            .Setup(s => s.GetRecipeFromImagesAsync(It.IsAny<List<ImageInput>>(), It.IsAny<CancellationToken>()))
+            .Setup(s => s.GetRecipeFromImagesAsync(It.IsAny<List<ImageInputDto>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(aiResult);
 
         RecipeAnalysisRequestEntity? capturedEntity = null;
@@ -81,7 +81,7 @@ public class CreateRecipeAnalysisRequestCommandHandlerTests
         var expectedGuid = Guid.NewGuid();
 
         _aiServiceMock.Setup(s =>
-                s.GetRecipeFromImagesAsync(It.IsAny<List<ImageInput>>(), It.IsAny<CancellationToken>()))
+                s.GetRecipeFromImagesAsync(It.IsAny<List<ImageInputDto>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync([]);
 
         _repositoryMock.Setup(r => r.AddAsync(It.IsAny<RecipeAnalysisRequestEntity>()))

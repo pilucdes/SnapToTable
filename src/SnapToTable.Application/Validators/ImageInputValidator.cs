@@ -4,7 +4,7 @@ using SnapToTable.Application.DTOs;
 
 namespace SnapToTable.Application.Validators;
 
-public class ImageInputValidator : AbstractValidator<ImageInput>
+public class ImageInputValidator : AbstractValidator<ImageInputDto>
 {
     public ImageInputValidator()
     {

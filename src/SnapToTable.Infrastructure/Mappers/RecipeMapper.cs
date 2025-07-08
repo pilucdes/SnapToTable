@@ -6,9 +6,9 @@ namespace SnapToTable.Infrastructure.Mappers;
 
 public static partial class RecipeMapper
 {
-    public static RecipeExtractionResult ToExtractionResult(RawRecipeDto rawRecipe)
+    public static RecipeExtractionResultDto ToExtractionResult(RawRecipeDto rawRecipe)
     {
-        return new RecipeExtractionResult
+        return new RecipeExtractionResultDto
         {
             Name = rawRecipe.Name,
             Category = rawRecipe.Category,

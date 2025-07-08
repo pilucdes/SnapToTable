@@ -1,6 +1,6 @@
 ﻿namespace SnapToTable.Application.DTOs;
 
-public record ImageInput(
+public record ImageInputDto(
     Stream Content,
     string ContentType
 );

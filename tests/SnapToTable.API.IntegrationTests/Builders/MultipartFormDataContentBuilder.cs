@@ -10,7 +10,7 @@ public class MultipartFormDataContentBuilder
     public MultipartFormDataContentBuilder WithFile(string fileContent, string contentType, string fileName)
     {
         var streamContent = TestFileContentFactory.CreateFakeFileContent(fileContent, contentType);
-        _content.Add(streamContent, nameof(CreateRecipeAnalysisRequest.Images), fileName);
+        _content.Add(streamContent, nameof(CreateRecipeAnalysisRequestDto.Images), fileName);
         return this;
     }
 
@@ -27,7 +27,7 @@ public class MultipartFormDataContentBuilder
     public MultipartFormDataContentBuilder WithLargeImage(long sizeInBytes, string fileName = "large.jpg")
     {
         var streamContent = TestFileContentFactory.CreateFakeFileContentOfSize(sizeInBytes, "image/jpeg");
-        _content.Add(streamContent, nameof(CreateRecipeAnalysisRequest.Images), fileName);
+        _content.Add(streamContent, nameof(CreateRecipeAnalysisRequestDto.Images), fileName);
         return this;
     }
 

@@ -20,7 +20,7 @@ public class CreateRecipeAnalysisRequestCommandValidatorTests
     public void Should_Have_Error_When_Images_Is_Empty()
     {
         // Arrange
-        var command = new CreateRecipeAnalysisRequestCommand(new List<ImageInput>());
+        var command = new CreateRecipeAnalysisRequestCommand(new List<ImageInputDto>());
 
         // Act
         var result = _validator.TestValidate(command);
@@ -34,7 +34,7 @@ public class CreateRecipeAnalysisRequestCommandValidatorTests
     public void Should_Have_Error_When_Image_Stream_Is_Empty()
     {
         // Arrange
-        var command = new CreateRecipeAnalysisRequestCommand(new List<ImageInput>
+        var command = new CreateRecipeAnalysisRequestCommand(new List<ImageInputDto>
         {
             RecipeAnalysisDataFactory.CreateEmptyStreamImageInput()
         });
@@ -88,7 +88,7 @@ public class CreateRecipeAnalysisRequestCommandValidatorTests
     public void Should_Validate_Each_Image_Using_ImageInputValidator_Invalid_ContentType()
     {
         // Arrange
-        var command = new CreateRecipeAnalysisRequestCommand(new List<ImageInput>
+        var command = new CreateRecipeAnalysisRequestCommand(new List<ImageInputDto>
         {
             new(RecipeAnalysisDataFactory.CreateValidStream(), "invalid/type")
         });
@@ -106,7 +106,7 @@ public class CreateRecipeAnalysisRequestCommandValidatorTests
     {
         // Arrange
         var oversizedStream = RecipeAnalysisDataFactory.CreateOversizedStream();
-        var command = new CreateRecipeAnalysisRequestCommand(new List<ImageInput>
+        var command = new CreateRecipeAnalysisRequestCommand(new List<ImageInputDto>
         {
             new(oversizedStream, "image/jpeg")
         });
@@ -126,7 +126,7 @@ public class CreateRecipeAnalysisRequestCommandValidatorTests
     public void Should_Accept_Valid_Image_ContentTypes(string contentType)
     {
         // Arrange
-        var command = new CreateRecipeAnalysisRequestCommand(new List<ImageInput>
+        var command = new CreateRecipeAnalysisRequestCommand(new List<ImageInputDto>
         {
             new(RecipeAnalysisDataFactory.CreateValidStream(), contentType)
         });
@@ -147,7 +147,7 @@ public class CreateRecipeAnalysisRequestCommandValidatorTests
     public void Should_Reject_Invalid_Image_ContentTypes(string contentType)
     {
         // Arrange
-        var command = new CreateRecipeAnalysisRequestCommand(new List<ImageInput>
+        var command = new CreateRecipeAnalysisRequestCommand(new List<ImageInputDto>
         {
             new(RecipeAnalysisDataFactory.CreateValidStream(), contentType)
         });
