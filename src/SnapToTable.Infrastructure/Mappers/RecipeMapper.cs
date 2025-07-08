@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace SnapToTable.Infrastructure.Mappers;
 
-public static class RecipeMapper
+public static partial class RecipeMapper
 {
     public static RecipeExtractionResult ToExtractionResult(RawRecipeDto rawRecipe)
     {
@@ -26,7 +26,7 @@ public static class RecipeMapper
     {
         if (string.IsNullOrWhiteSpace(input)) return null;
 
-        var match = Regex.Match(input, @"\d+");
+        var match = ServingsRegex().Match(input);
         return match.Success && int.TryParse(match.Value, out var result) ? result : null;
     }
     private static TimeSpan? ParseTime(string? input)
@@ -34,26 +34,42 @@ public static class RecipeMapper
         if (string.IsNullOrWhiteSpace(input)) return null;
 
         var totalMinutes = 0;
-        // Case-insensitive matching for "hour" or "hr"
-        var hourMatches = Regex.Matches(input, @"(\d+)\s*(hour|hr)", RegexOptions.IgnoreCase);
-        if (hourMatches.Count > 0 && int.TryParse(hourMatches[0].Groups[1].Value, out var hours))
-        {
-            totalMinutes += hours * 60;
-        }
 
-        // Case-insensitive matching for "minute" or "min"
-        var minuteMatches = Regex.Matches(input, @"(\d+)\s*(minute|min)", RegexOptions.IgnoreCase);
-        if (minuteMatches.Count > 0 && int.TryParse(minuteMatches[0].Groups[1].Value, out var minutes))
-        {
-            totalMinutes += minutes;
-        }
+        totalMinutes += GetTotalMinutesFromHoursInput(input);
+        totalMinutes += GetTotalMinutesFromMinuteInput(input);
         
-        // Fallback for number-only strings, assuming minutes.
-        if (totalMinutes == 0 && int.TryParse(Regex.Match(input, @"\d+").Value, out var minutesOnly))
-        {
-            totalMinutes = minutesOnly;
-        }
-
         return totalMinutes > 0 ? TimeSpan.FromMinutes(totalMinutes) : null;
     }
+
+    private static int GetTotalMinutesFromMinuteInput(string input)
+    {
+        var totalMinutes = 0;
+        var minuteMatches = MinuteRegex().Matches(input);
+        if (minuteMatches.Count > 0 && int.TryParse(minuteMatches[0].Groups[1].Value, out var minutes))
+        {
+            totalMinutes = minutes;
+        }
+
+        return totalMinutes;
+    }
+    private static int GetTotalMinutesFromHoursInput(string input)
+    {
+        var totalMinutes = 0;
+        var hourMatches = HourRegex().Matches(input);
+        if (hourMatches.Count > 0 && int.TryParse(hourMatches[0].Groups[1].Value, out var hours))
+        {
+            totalMinutes = hours * 60;
+        }
+
+        return totalMinutes;
+    }
+
+    [GeneratedRegex(@"(\d+)\s*(hour|hr)", RegexOptions.IgnoreCase)]
+    private static partial Regex HourRegex();
+    
+    [GeneratedRegex(@"(\d+)\s*(minute|min)", RegexOptions.IgnoreCase)]
+    private static partial Regex MinuteRegex();
+    
+    [GeneratedRegex(@"\d+")]
+    private static partial Regex ServingsRegex();
 }

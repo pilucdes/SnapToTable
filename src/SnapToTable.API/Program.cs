@@ -33,7 +33,7 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
 }
 
-app.UseMiddleware<ErrorHandlerMiddleware>();
+app.UseMiddleware<GlobalErrorHandler>();
 app.UseAuthorization();
 
 app.MapControllers();

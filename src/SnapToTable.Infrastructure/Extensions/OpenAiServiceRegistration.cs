@@ -13,7 +13,7 @@ public static class OpenAiServiceRegistration
 
         if (string.IsNullOrWhiteSpace(openApiKey))
         {
-            throw new InvalidOperationException("Configuration Error: The OpenAI API Key is missing or empty. ");
+            throw new InvalidOperationException("Configuration Error: The OpenAI API Key is missing or empty.");
         }
 
         services.Configure<OpenAiSettings>(configuration.GetSection("OpenAI"));

@@ -6,13 +6,13 @@ using SnapToTable.API.Extensions;
 
 namespace SnapToTable.API.Middlewares;
 
-public class ErrorHandlerMiddleware
+public class GlobalErrorHandler
 {
     private readonly RequestDelegate _next;
-    private readonly ILogger<ErrorHandlerMiddleware> _logger;
+    private readonly ILogger<GlobalErrorHandler> _logger;
     private readonly IHostEnvironment _env;
 
-    public ErrorHandlerMiddleware(RequestDelegate next, ILogger<ErrorHandlerMiddleware> logger, IHostEnvironment env)
+    public GlobalErrorHandler(RequestDelegate next, ILogger<GlobalErrorHandler> logger, IHostEnvironment env)
     {
         _next = next;
         _logger = logger;
