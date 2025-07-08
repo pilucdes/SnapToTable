@@ -1,8 +1,8 @@
 ﻿using SnapToTable.Application.Constants;
 using SnapToTable.Application.DTOs;
-using SnapToTable.Application.Features.RecipeAnalysisRequest.CreateRecipeAnalysisRequest;
+using SnapToTable.Application.Features.RecipeAnalysis.Create;
 
-namespace SnapToTable.Application.UnitTests.Features.RecipeAnalysisRequest;
+namespace SnapToTable.Application.UnitTests.Features.RecipeAnalysis;
 
 public static class RecipeAnalysisDataFactory
 {
@@ -40,9 +40,9 @@ public static class RecipeAnalysisDataFactory
         ];
     }
 
-    public static CreateRecipeAnalysisRequestCommand CreateValidCommand()
+    public static CreateRecipeAnalysisCommand CreateValidCommand()
     {
-        return new CreateRecipeAnalysisRequestCommand(new List<ImageInputDto>
+        return new CreateRecipeAnalysisCommand(new List<ImageInputDto>
         {
             CreateValidImageInput()
         });

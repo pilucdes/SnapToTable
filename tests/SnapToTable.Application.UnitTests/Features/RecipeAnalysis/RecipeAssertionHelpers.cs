@@ -2,7 +2,7 @@
 using SnapToTable.Application.DTOs;
 using SnapToTable.Domain.Entities;
 
-namespace SnapToTable.Application.UnitTests.Features.RecipeAnalysisRequest;
+namespace SnapToTable.Application.UnitTests.Features.RecipeAnalysis;
 
 public static class RecipeAssertionHelpers
 {

@@ -46,7 +46,7 @@ public class ServiceRegistrationTests
         
         AssertServiceIsRegistered<IMongoClient>(services, ServiceLifetime.Singleton);
         AssertServiceIsRegistered<IMongoDatabase>(services, ServiceLifetime.Singleton);
-        AssertServiceIsRegistered<IRecipeAnalysisRequestRepository, RecipeAnalysisRequestRepository>(services,
+        AssertServiceIsRegistered<IRecipeAnalysisRepository, RecipeAnalysisRepository>(services,
             ServiceLifetime.Scoped);
         AssertServiceIsRegistered<IAiRecipeExtractionService, AiRecipeExtractionService>(services,
             ServiceLifetime.Scoped);
@@ -55,7 +55,7 @@ public class ServiceRegistrationTests
         serviceProvider.GetService<IMongoDatabase>().ShouldNotBeNull();
 
         using var scope = serviceProvider.CreateScope();
-        scope.ServiceProvider.GetService<IRecipeAnalysisRequestRepository>().ShouldNotBeNull();
+        scope.ServiceProvider.GetService<IRecipeAnalysisRepository>().ShouldNotBeNull();
         scope.ServiceProvider.GetService<IAiRecipeExtractionService>().ShouldNotBeNull();
     }
 

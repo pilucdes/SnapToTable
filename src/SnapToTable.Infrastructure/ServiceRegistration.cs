@@ -35,7 +35,7 @@ public static class ServiceRegistration
             return client.GetDatabase(settings.DatabaseName);
         });
         
-        services.AddScoped<IRecipeAnalysisRequestRepository, RecipeAnalysisRequestRepository>();
+        services.AddScoped<IRecipeAnalysisRepository, RecipeAnalysisRepository>();
         services.AddScoped<IAiRecipeExtractionService, AiRecipeExtractionService>();
 
         return services;

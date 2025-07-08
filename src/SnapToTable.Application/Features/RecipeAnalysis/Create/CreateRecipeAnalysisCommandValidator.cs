@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
 using SnapToTable.Application.Validators;
 
-namespace SnapToTable.Application.Features.RecipeAnalysisRequest.CreateRecipeAnalysisRequest;
+namespace SnapToTable.Application.Features.RecipeAnalysis.Create;
 
-public class CreateRecipeAnalysisRequestCommandValidator : AbstractValidator<CreateRecipeAnalysisRequestCommand>
+public class CreateRecipeAnalysisCommandValidator : AbstractValidator<CreateRecipeAnalysisCommand>
 {
-    public CreateRecipeAnalysisRequestCommandValidator()
+    public CreateRecipeAnalysisCommandValidator()
     {
         RuleFor(x => x.Images)
             .NotEmpty().WithMessage("At least one image is required.")

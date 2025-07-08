@@ -2,25 +2,23 @@
 using Shouldly;
 using SnapToTable.Application.Contracts;
 using SnapToTable.Application.DTOs;
-using SnapToTable.Application.Features.RecipeAnalysisRequest.CreateRecipeAnalysisRequest;
-using SnapToTable.Domain.Entities;
+using SnapToTable.Application.Features.RecipeAnalysis.Create;
 using SnapToTable.Domain.Repositories;
 using Xunit;
-using RecipeAnalysisRequestEntity = SnapToTable.Domain.Entities.RecipeAnalysisRequest;
 
-namespace SnapToTable.Application.UnitTests.Features.RecipeAnalysisRequest.CreateRecipeAnalysisRequest;
+namespace SnapToTable.Application.UnitTests.Features.RecipeAnalysis.Create;
 
-public class CreateRecipeAnalysisRequestCommandHandlerTests
+public class CreateRecipeAnalysisCommandHandlerTests
 {
-    private readonly Mock<IRecipeAnalysisRequestRepository> _repositoryMock;
+    private readonly Mock<IRecipeAnalysisRepository> _repositoryMock;
     private readonly Mock<IAiRecipeExtractionService> _aiServiceMock;
-    private readonly CreateRecipeAnalysisRequestCommandHandler _handler;
+    private readonly CreateRecipeAnalysisCommandHandler _handler;
 
-    public CreateRecipeAnalysisRequestCommandHandlerTests()
+    public CreateRecipeAnalysisCommandHandlerTests()
     {
-        _repositoryMock = new Mock<IRecipeAnalysisRequestRepository>();
+        _repositoryMock = new Mock<IRecipeAnalysisRepository>();
         _aiServiceMock = new Mock<IAiRecipeExtractionService>();
-        _handler = new CreateRecipeAnalysisRequestCommandHandler(_repositoryMock.Object, _aiServiceMock.Object);
+        _handler = new CreateRecipeAnalysisCommandHandler(_repositoryMock.Object, _aiServiceMock.Object);
     }
 
     [Fact]
@@ -40,7 +38,7 @@ public class CreateRecipeAnalysisRequestCommandHandlerTests
         // Assert
         _aiServiceMock.Verify(s => s.GetRecipeFromImagesAsync(command.Images, It.IsAny<CancellationToken>()),
             Times.Once);
-        _repositoryMock.Verify(r => r.AddAsync(It.IsAny<RecipeAnalysisRequestEntity>()), Times.Once);
+        _repositoryMock.Verify(r => r.AddAsync(It.IsAny<Domain.Entities.RecipeAnalysis>()), Times.Once);
     }
 
     [Fact]
@@ -54,10 +52,10 @@ public class CreateRecipeAnalysisRequestCommandHandlerTests
             .Setup(s => s.GetRecipeFromImagesAsync(It.IsAny<List<ImageInputDto>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(aiResult);
 
-        RecipeAnalysisRequestEntity? capturedEntity = null;
+        Domain.Entities.RecipeAnalysis? capturedEntity = null;
         _repositoryMock
-            .Setup(r => r.AddAsync(It.IsAny<RecipeAnalysisRequestEntity>()))
-            .Callback<RecipeAnalysisRequestEntity>(entity => capturedEntity = entity);
+            .Setup(r => r.AddAsync(It.IsAny<Domain.Entities.RecipeAnalysis>()))
+            .Callback<Domain.Entities.RecipeAnalysis>(entity => capturedEntity = entity);
 
         // Act
         await _handler.Handle(command, CancellationToken.None);
@@ -84,8 +82,8 @@ public class CreateRecipeAnalysisRequestCommandHandlerTests
                 s.GetRecipeFromImagesAsync(It.IsAny<List<ImageInputDto>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync([]);
 
-        _repositoryMock.Setup(r => r.AddAsync(It.IsAny<RecipeAnalysisRequestEntity>()))
-            .Callback<RecipeAnalysisRequestEntity>(entity => { entity.Id = expectedGuid; });
+        _repositoryMock.Setup(r => r.AddAsync(It.IsAny<Domain.Entities.RecipeAnalysis>()))
+            .Callback<Domain.Entities.RecipeAnalysis>(entity => { entity.Id = expectedGuid; });
 
         // Act
         var resultId = await _handler.Handle(command, CancellationToken.None);

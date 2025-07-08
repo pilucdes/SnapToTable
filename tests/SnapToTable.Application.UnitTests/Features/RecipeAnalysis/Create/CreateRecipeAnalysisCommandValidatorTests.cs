@@ -2,25 +2,25 @@
 using Shouldly;
 using SnapToTable.Application.Constants;
 using SnapToTable.Application.DTOs;
-using SnapToTable.Application.Features.RecipeAnalysisRequest.CreateRecipeAnalysisRequest;
+using SnapToTable.Application.Features.RecipeAnalysis.Create;
 using Xunit;
 
-namespace SnapToTable.Application.UnitTests.Features.RecipeAnalysisRequest.CreateRecipeAnalysisRequest;
+namespace SnapToTable.Application.UnitTests.Features.RecipeAnalysis.Create;
 
-public class CreateRecipeAnalysisRequestCommandValidatorTests
+public class CreateRecipeAnalysisCommandValidatorTests
 {
-    private readonly CreateRecipeAnalysisRequestCommandValidator _validator;
+    private readonly CreateRecipeAnalysisCommandValidator _validator;
 
-    public CreateRecipeAnalysisRequestCommandValidatorTests()
+    public CreateRecipeAnalysisCommandValidatorTests()
     {
-        _validator = new CreateRecipeAnalysisRequestCommandValidator();
+        _validator = new CreateRecipeAnalysisCommandValidator();
     }
 
     [Fact]
     public void Should_Have_Error_When_Images_Is_Empty()
     {
         // Arrange
-        var command = new CreateRecipeAnalysisRequestCommand(new List<ImageInputDto>());
+        var command = new CreateRecipeAnalysisCommand(new List<ImageInputDto>());
 
         // Act
         var result = _validator.TestValidate(command);
@@ -34,7 +34,7 @@ public class CreateRecipeAnalysisRequestCommandValidatorTests
     public void Should_Have_Error_When_Image_Stream_Is_Empty()
     {
         // Arrange
-        var command = new CreateRecipeAnalysisRequestCommand(new List<ImageInputDto>
+        var command = new CreateRecipeAnalysisCommand(new List<ImageInputDto>
         {
             RecipeAnalysisDataFactory.CreateEmptyStreamImageInput()
         });
@@ -55,7 +55,7 @@ public class CreateRecipeAnalysisRequestCommandValidatorTests
             .Select(_ => RecipeAnalysisDataFactory.CreateValidImageInput())
             .ToList();
         
-        var command = new CreateRecipeAnalysisRequestCommand(images);
+        var command = new CreateRecipeAnalysisCommand(images);
 
         // Act
         var result = _validator.TestValidate(command);
@@ -75,7 +75,7 @@ public class CreateRecipeAnalysisRequestCommandValidatorTests
             .Select(_ => RecipeAnalysisDataFactory.CreateValidImageInput())
             .ToList();
         
-        var command = new CreateRecipeAnalysisRequestCommand(images);
+        var command = new CreateRecipeAnalysisCommand(images);
 
         // Act
         var result = _validator.TestValidate(command);
@@ -88,7 +88,7 @@ public class CreateRecipeAnalysisRequestCommandValidatorTests
     public void Should_Validate_Each_Image_Using_ImageInputValidator_Invalid_ContentType()
     {
         // Arrange
-        var command = new CreateRecipeAnalysisRequestCommand(new List<ImageInputDto>
+        var command = new CreateRecipeAnalysisCommand(new List<ImageInputDto>
         {
             new(RecipeAnalysisDataFactory.CreateValidStream(), "invalid/type")
         });
@@ -106,7 +106,7 @@ public class CreateRecipeAnalysisRequestCommandValidatorTests
     {
         // Arrange
         var oversizedStream = RecipeAnalysisDataFactory.CreateOversizedStream();
-        var command = new CreateRecipeAnalysisRequestCommand(new List<ImageInputDto>
+        var command = new CreateRecipeAnalysisCommand(new List<ImageInputDto>
         {
             new(oversizedStream, "image/jpeg")
         });
@@ -126,7 +126,7 @@ public class CreateRecipeAnalysisRequestCommandValidatorTests
     public void Should_Accept_Valid_Image_ContentTypes(string contentType)
     {
         // Arrange
-        var command = new CreateRecipeAnalysisRequestCommand(new List<ImageInputDto>
+        var command = new CreateRecipeAnalysisCommand(new List<ImageInputDto>
         {
             new(RecipeAnalysisDataFactory.CreateValidStream(), contentType)
         });
@@ -147,7 +147,7 @@ public class CreateRecipeAnalysisRequestCommandValidatorTests
     public void Should_Reject_Invalid_Image_ContentTypes(string contentType)
     {
         // Arrange
-        var command = new CreateRecipeAnalysisRequestCommand(new List<ImageInputDto>
+        var command = new CreateRecipeAnalysisCommand(new List<ImageInputDto>
         {
             new(RecipeAnalysisDataFactory.CreateValidStream(), contentType)
         });

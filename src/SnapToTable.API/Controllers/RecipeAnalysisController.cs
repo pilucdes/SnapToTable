@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using SnapToTable.API.DTOs;
 using SnapToTable.Application.DTOs;
-using SnapToTable.Application.Features.RecipeAnalysisRequest.CreateRecipeAnalysisRequest;
-using SnapToTable.Application.Features.RecipeAnalysisRequest.GetRecipeAnalysisRequestDetails;
+using SnapToTable.Application.Features.RecipeAnalysis.Create;
+using SnapToTable.Application.Features.RecipeAnalysis.GetById;
 
 namespace SnapToTable.API.Controllers;
 
@@ -17,7 +17,7 @@ public class RecipeAnalysisController : ApiBaseController
     [Consumes("multipart/form-data")]
     public async Task<IActionResult> CreateAnalysis([FromForm] CreateRecipeAnalysisRequestDto requestDto)
     {
-        var command = new CreateRecipeAnalysisRequestCommand(
+        var command = new CreateRecipeAnalysisCommand(
             requestDto.Images.Select(img => new ImageInputDto(
                 img.OpenReadStream(),
                 img.ContentType
@@ -38,7 +38,7 @@ public class RecipeAnalysisController : ApiBaseController
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetAnalysisById(Guid id)
     {
-        var query = new GetRecipeAnalysisDetailsRequestQuery(id);
+        var query = new GetRecipeAnalysisByIdQuery(id);
 
         var result = await Mediator.Send(query);
 

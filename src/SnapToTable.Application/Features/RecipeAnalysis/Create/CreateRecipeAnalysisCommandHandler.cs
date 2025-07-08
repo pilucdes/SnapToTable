@@ -3,25 +3,25 @@ using SnapToTable.Application.Contracts;
 using SnapToTable.Domain.Entities;
 using SnapToTable.Domain.Repositories;
 
-namespace SnapToTable.Application.Features.RecipeAnalysisRequest.CreateRecipeAnalysisRequest;
+namespace SnapToTable.Application.Features.RecipeAnalysis.Create;
 
-public class CreateRecipeAnalysisRequestCommandHandler : IRequestHandler<CreateRecipeAnalysisRequestCommand, Guid>
+public class CreateRecipeAnalysisCommandHandler : IRequestHandler<CreateRecipeAnalysisCommand, Guid>
 {
-    private readonly IRecipeAnalysisRequestRepository _repository;
+    private readonly IRecipeAnalysisRepository _repository;
     private readonly IAiRecipeExtractionService _aiRecipeExtractionService;
 
-    public CreateRecipeAnalysisRequestCommandHandler(IRecipeAnalysisRequestRepository repository,
+    public CreateRecipeAnalysisCommandHandler(IRecipeAnalysisRepository repository,
         IAiRecipeExtractionService aiRecipeExtractionService)
     {
         _repository = repository;
         _aiRecipeExtractionService = aiRecipeExtractionService;
     }
 
-    public async Task<Guid> Handle(CreateRecipeAnalysisRequestCommand request, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(CreateRecipeAnalysisCommand request, CancellationToken cancellationToken)
     {
         var extractedRecipes = await _aiRecipeExtractionService.GetRecipeFromImagesAsync(request.Images, cancellationToken);
 
-        var newAnalysis = new Domain.Entities.RecipeAnalysisRequest(extractedRecipes.Select(recipe =>
+        var newAnalysis = new Domain.Entities.RecipeAnalysis(extractedRecipes.Select(recipe =>
             new Recipe(recipe.Name,
                 recipe.Category,
                 recipe.PrepTime,

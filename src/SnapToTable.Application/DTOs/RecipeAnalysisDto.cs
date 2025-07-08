@@ -1,6 +1,6 @@
 ﻿namespace SnapToTable.Application.DTOs;
 
-public record RecipeAnalysisRequestDto(
+public record RecipeAnalysisDto(
     Guid Id,
     DateTime CreatedAt,
     List<RecipeDto> Recipes

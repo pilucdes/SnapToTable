@@ -1,5 +1,5 @@
 ﻿namespace SnapToTable.Domain.Entities;
 
-public record RecipeAnalysisRequest(
+public record RecipeAnalysis(
     ICollection<Recipe> Recipes
 ) : BaseEntity;
