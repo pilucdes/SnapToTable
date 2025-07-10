@@ -7,9 +7,9 @@ namespace SnapToTable.Infrastructure.Repositories;
 
 public class RecipeAnalysisRepository : BaseRepository<RecipeAnalysis>, IRecipeAnalysisRepository
 {
-    public RecipeAnalysisRepository(IMongoDatabase database) 
-        : base(database, "recipeAnalysis")
+    public const string CollectionName = "recipeAnalysis";
+    public RecipeAnalysisRepository(IMongoDatabase database)
+        : base(database, CollectionName)
     {
     }
-
-} 
+}

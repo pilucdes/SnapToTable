@@ -22,6 +22,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <ProjectReference Include="..\..\src\SnapToTable.Api\SnapToTable.Api.csproj" />
+    <ProjectReference Include="..\..\tests\SnapToTable.Tests.Common\SnapToTable.Tests.Common.csproj" />
   </ItemGroup>
   
 </Project>

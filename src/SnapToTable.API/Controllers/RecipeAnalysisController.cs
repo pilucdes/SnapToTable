@@ -25,14 +25,12 @@ public class RecipeAnalysisController : ApiBaseController
         );
 
         var result = await Mediator.Send(command);
-
-        return Ok(result);
-
-        // return CreatedAtAction(
-        //     nameof(GetAnalysisById),
-        //     new { id = result },
-        //     result
-        // );
+        
+        return CreatedAtAction(
+            nameof(GetAnalysisById),
+            new { id = result },
+            result
+        );
     }
 
     [HttpGet("{id:guid}")]

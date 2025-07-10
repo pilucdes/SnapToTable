@@ -63,12 +63,6 @@ public class GlobalErrorHandler
                 problemDetails.Type = "https://httpstatuses.com/404";
                 problemDetails.Detail = notFoundException.Message;
                 break;
-            case ApplicationException applicationException:
-                problemDetails.Status = (int)HttpStatusCode.BadRequest;
-                problemDetails.Title = "One or more application errors occurred.";
-                problemDetails.Type = "https://httpstatuses.com/400";
-                problemDetails.Detail = applicationException.Message;
-                break;
             default:
                 problemDetails.Detail = "An unexpected error occurred. Please try again later.";
                 break;

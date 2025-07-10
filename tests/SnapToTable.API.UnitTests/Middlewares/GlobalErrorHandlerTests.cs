@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Shouldly;
 using SnapToTable.API.Middlewares;
+using SnapToTable.Application.Exceptions;
 using Xunit;
 
 namespace SnapToTable.API.UnitTests.Middlewares;
@@ -84,7 +85,6 @@ public class GlobalErrorHandlerTests
         VerifyLoggerWasCalled(exception);
     }
 
-
     [Fact]
     public async Task InvokeAsync_WhenGenericExceptionInDevelopment_Returns500WithStackTrace()
     {
@@ -158,7 +158,39 @@ public class GlobalErrorHandlerTests
 
         VerifyLoggerWasCalled(exception);
     }
+    
+    [Fact]
+    public async Task InvokeAsync_WhenNotFoundException_Returns404WithFormattedErrors()
+    {
+        // Arrange
+        var exception = new NotFoundException("A","Id");
+        _mockHostEnvironment.Setup(env => env.EnvironmentName).Returns("Production");
+        _mockNext.Setup(next => next(It.IsAny<HttpContext>())).ThrowsAsync(exception);
 
+        var context = new DefaultHttpContext();
+        context.Response.Body = new MemoryStream();
+
+        // Act
+        await _middleware.InvokeAsync(context);
+
+        // Assert
+        context.Response.StatusCode.ShouldBe(404);
+        context.Response.ContentType.ShouldBe("application/problem+json");
+
+        var responseBody = await GetResponseBody(context);
+        var problemDetails = JsonSerializer.Deserialize<TestValidationProblemDetails>(responseBody,
+            new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+        problemDetails.ShouldNotBeNull();
+        problemDetails.Status.ShouldBe(404);
+        problemDetails.Title.ShouldBe("The requested resource was not found.");
+        problemDetails.Detail.ShouldBe("Entity \"A\" (Id) was not found.");
+        problemDetails.Extensions.ShouldNotContainKey("exceptionType");
+        problemDetails.Extensions.ShouldNotContainKey("stackTrace");
+
+        VerifyLoggerWasCalled(exception);
+    }
+    
     private async Task<string> GetResponseBody(HttpContext context)
     {
         context.Response.Body.Seek(0, SeekOrigin.Begin);

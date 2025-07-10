@@ -1,16 +1,9 @@
-﻿using System.Text.Json;
-using Betalgo.Ranul.OpenAI.Interfaces;
-using Betalgo.Ranul.OpenAI.ObjectModels;
-using Betalgo.Ranul.OpenAI.ObjectModels.RequestModels;
-using Betalgo.Ranul.OpenAI.ObjectModels.ResponseModels;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
-using Moq;
 using SnapToTable.API.IntegrationTests.Constants;
 using SnapToTable.API.IntegrationTests.Fixtures;
 using SnapToTable.API.IntegrationTests.Mocks;
-using SnapToTable.Infrastructure.DTOs;
 using Xunit;
 
 namespace SnapToTable.API.IntegrationTests;
@@ -23,7 +16,7 @@ public abstract class BaseApiTest : IAsyncLifetime
 {
     protected readonly HttpClient Client;
     protected readonly OpenAiServiceMockProvider MockOpenAiProvider;
-    
+    private readonly IMongoDatabase _database;
     private readonly IMongoClient _mongoClient;
     private readonly string _databaseName;  
     
@@ -50,6 +43,8 @@ public abstract class BaseApiTest : IAsyncLifetime
         });
 
         _mongoClient = appFactory.Services.GetRequiredService<IMongoClient>();
+        
+        _database = _mongoClient.GetDatabase(_databaseName);
         Client = appFactory.CreateClient();
     }
 
@@ -58,5 +53,10 @@ public abstract class BaseApiTest : IAsyncLifetime
     public async Task DisposeAsync()
     {
         await _mongoClient.DropDatabaseAsync(_databaseName);
+    }
+    
+    protected async Task SeedDatabaseWithAsync<T>(T entity,string collectionName) where T : class
+    {
+        await _database.GetCollection<T>(collectionName).InsertOneAsync(entity);
     }
 }

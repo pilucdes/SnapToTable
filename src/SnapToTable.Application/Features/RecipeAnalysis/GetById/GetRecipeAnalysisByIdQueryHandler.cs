@@ -12,8 +12,7 @@ public class
 {
     private readonly IRecipeAnalysisRepository _repository;
 
-    public GetRecipeAnalysisByIdQueryHandler(IRecipeAnalysisRepository repository,
-        IAiRecipeExtractionService aiRecipeExtractionService)
+    public GetRecipeAnalysisByIdQueryHandler(IRecipeAnalysisRepository repository)
     {
         _repository = repository;
     }
