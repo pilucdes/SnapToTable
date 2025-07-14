@@ -36,6 +36,7 @@ public static class ServiceRegistration
         });
         
         services.AddScoped<IRecipeAnalysisRepository, RecipeAnalysisRepository>();
+        services.AddScoped<IRecipeRepository, RecipeRepository>();
         services.AddScoped<IAiRecipeExtractionService, AiRecipeExtractionService>();
 
         return services;

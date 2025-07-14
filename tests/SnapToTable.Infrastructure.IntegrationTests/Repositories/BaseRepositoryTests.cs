@@ -18,7 +18,7 @@ public class BaseRepositoryTests : BaseTest
     {
         _repository = new BaseRepository<EntityTest>(Database, CollectionName);
     }
-    
+
     [Fact]
     public async Task AddAsync_GivenNewEntity_ShouldAddNewEntity()
     {
@@ -37,8 +37,34 @@ public class BaseRepositoryTests : BaseTest
         addedEntity.Id.ShouldBe(newEntity.Id);
         addedEntity.Name.ShouldBe(newEntity.Name);
         addedEntity.Number.ShouldBe(newEntity.Number);
-        
+
         addedEntity.CreatedAt.ShouldBe(initialCreationDate, tolerance: TimeSpan.FromSeconds(1));
+    }
+
+    [Fact]
+    public async Task AddRangeAsync_GivenNewEntities_ShouldAddEntities()
+    {
+        // Arrange
+        var entity1 = new EntityTest("added1", 1);
+        var entity2 = new EntityTest("added2", 2);
+
+        var initialCreationDate = DateTime.UtcNow;
+
+        // Act
+        await _repository.AddRangeAsync([entity1, entity2]);
+
+        // Assert
+        var pagedEntities = await _repository.GetPagedAsync(1, 5, p => p);
+        pagedEntities.TotalPages.ShouldBe(1);
+        pagedEntities.TotalCount.ShouldBe(2);
+        pagedEntities.Items.ShouldNotBeEmpty();
+        pagedEntities.Items[0].Id.ShouldBe(entity1.Id);
+        pagedEntities.Items[0].Name.ShouldBe(entity1.Name);
+        pagedEntities.Items[0].CreatedAt.ShouldBe(initialCreationDate, tolerance: TimeSpan.FromSeconds(1));
+        
+        pagedEntities.Items[1].Id.ShouldBe(entity2.Id);
+        pagedEntities.Items[1].Name.ShouldBe(entity2.Name);
+        pagedEntities.Items[1].CreatedAt.ShouldBe(initialCreationDate, tolerance: TimeSpan.FromSeconds(1));
     }
 
     [Fact]
@@ -114,7 +140,7 @@ public class BaseRepositoryTests : BaseTest
         // Assert
         pagedResult.Items.Count.ShouldBe(5);
         var actualIds = pagedResult.Items.Select(item => item.Id).ToList();
-        
+
         var expectedSortedIds = pagedResult.Items.OrderByDescending(i => i.Id).Select(i => i.Id).ToList();
         actualIds.ShouldBe(expectedSortedIds, "Results should be sorted by Id descending by default.");
     }
@@ -177,7 +203,7 @@ public class BaseRepositoryTests : BaseTest
         pagedResult.TotalPages.ShouldBe(0);
         pagedResult.PageNumber.ShouldBe(1);
     }
-    
+
     private async Task<List<EntityTest>> SeedEntitiesAsync(int count)
     {
         var entities = Enumerable.Range(1, count)

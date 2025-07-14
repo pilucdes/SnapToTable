@@ -9,22 +9,22 @@ using Xunit;
 
 namespace SnapToTable.Application.UnitTests.Features.RecipeAnalysis.GetById;
 
-public class GetRecipeAnalysisByIdQueryHandlerTests
+public class GetRecipeByIdQueryHandlerTests
 {
     private readonly Mock<IRecipeAnalysisRepository> _mockRepo;
-    private readonly GetRecipeAnalysisByIdQueryHandler _handler;
+    private readonly GetRecipeByIdQueryHandler _handler;
 
-    public GetRecipeAnalysisByIdQueryHandlerTests()
+    public GetRecipeByIdQueryHandlerTests()
     {
         _mockRepo = new Mock<IRecipeAnalysisRepository>();
-        _handler = new GetRecipeAnalysisByIdQueryHandler(_mockRepo.Object);
+        _handler = new GetRecipeByIdQueryHandler(_mockRepo.Object);
     }
 
     [Fact]
     public async Task Handle_WhenAnalysisIsFound_ShouldReturnCorrectRecipeAnalysisDto()
     {
         // Arrange
-        var query = new GetRecipeAnalysisByIdQuery(Guid.NewGuid());
+        var query = new GetRecipeByIdQuery(Guid.NewGuid());
 
         var recipeAnalysisEntity = new RecipeAnalysisBuilder()
             .WithId(query.Id)
@@ -59,7 +59,7 @@ public class GetRecipeAnalysisByIdQueryHandlerTests
     public async Task Handle_WhenAnalysisIsNotFound_ShouldThrowNotFoundException()
     {
         // Arrange
-        var query = new GetRecipeAnalysisByIdQuery(Guid.NewGuid());
+        var query = new GetRecipeByIdQuery(Guid.NewGuid());
 
         _mockRepo.Setup(r => r.GetByIdAsync(It.IsAny<Guid>()))
             .ReturnsAsync((Domain.Entities.RecipeAnalysis)null!);

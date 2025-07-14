@@ -9,7 +9,7 @@ namespace SnapToTable.Infrastructure.Repositories;
 
 public class BaseRepository<T> : IRepository<T> where T : BaseEntity
 {
-    private readonly IMongoCollection<T> _collection;
+    protected readonly IMongoCollection<T> _collection;
 
     public BaseRepository(IMongoDatabase database, string collectionName)
     {
@@ -22,16 +22,24 @@ public class BaseRepository<T> : IRepository<T> where T : BaseEntity
         return await _collection.Find(filter).FirstOrDefaultAsync();
     }
 
-    public virtual async Task<IEnumerable<T>> GetAllAsync()
-    {
-        return await _collection.Find(Builders<T>.Filter.Empty).ToListAsync();
-    }
-
     public virtual async Task AddAsync(T entity)
     {
         entity.CreatedAt = DateTime.UtcNow;
         await _collection.InsertOneAsync(entity);
     }
+
+    public virtual async Task AddRangeAsync(IEnumerable<T> entities)
+    {
+        var entityList = entities.ToList();
+        
+        foreach (var entity in entityList)
+        {
+            entity.CreatedAt = DateTime.UtcNow;
+        }
+
+        await _collection.InsertManyAsync(entityList);
+    }
+
 
     public virtual async Task UpdateAsync(T entity)
     {
@@ -60,7 +68,7 @@ public class BaseRepository<T> : IRepository<T> where T : BaseEntity
         var finalFilter = filter ?? Builders<T>.Filter.Empty;
         var totalCount = await _collection.CountDocumentsAsync(finalFilter);
         var findFluent = _collection.Find(finalFilter);
-        
+
         var finalSort = GetSortDefinition(sortOrder);
 
         var items = await findFluent

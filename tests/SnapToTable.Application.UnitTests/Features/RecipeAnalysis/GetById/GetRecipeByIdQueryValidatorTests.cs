@@ -4,19 +4,19 @@ using Xunit;
 
 namespace SnapToTable.Application.UnitTests.Features.RecipeAnalysis.GetById;
 
-public class GetRecipeAnalysisByIdQueryValidatorTests
+public class GetRecipeByIdQueryValidatorTests
 {
-    private readonly GetRecipeAnalysisByIdQueryValidator _validator;
+    private readonly GetRecipeByIdQueryValidator _validator;
 
-    public GetRecipeAnalysisByIdQueryValidatorTests()
+    public GetRecipeByIdQueryValidatorTests()
     {
-        _validator = new GetRecipeAnalysisByIdQueryValidator();
+        _validator = new GetRecipeByIdQueryValidator();
     }
 
     [Fact]
     public void Validate_WhenIdIsEmpty_ShouldHaveValidationError()
     {
-        var query = new GetRecipeAnalysisByIdQuery(Guid.Empty);
+        var query = new GetRecipeByIdQuery(Guid.Empty);
         
         var result = _validator.TestValidate(query);
         
@@ -27,7 +27,7 @@ public class GetRecipeAnalysisByIdQueryValidatorTests
     [Fact]
     public void Validate_WhenIdIsProvided_ShouldNotHaveValidationError()
     {
-        var query = new GetRecipeAnalysisByIdQuery(Guid.NewGuid());
+        var query = new GetRecipeByIdQuery(Guid.NewGuid());
         
         var result = _validator.TestValidate(query);
 
