@@ -4,8 +4,12 @@ namespace SnapToTable.Tests.Common.Builders;
 
 public class RecipeBuilder
 {
+    private Guid _id = Guid.NewGuid();
+    private Guid _recipeAnalysisId = Guid.NewGuid();
+    private DateTime _createdAt = DateTime.MinValue;
     private string _name = "Default Test Recipe";
     private string _category = "Default Category";
+ 
     private TimeSpan? _prepTime = TimeSpan.FromMinutes(10);
     private TimeSpan? _cookTime = TimeSpan.FromMinutes(20);
     private TimeSpan? _additionalTime = TimeSpan.FromMinutes(30);
@@ -13,6 +17,24 @@ public class RecipeBuilder
     private readonly List<string> _ingredients = [];
     private readonly List<string> _directions = [];
     private readonly List<string> _notes = [];
+    
+    public RecipeBuilder WithId(Guid id)
+    {
+        _id = id;
+        return this;
+    }
+    
+    public RecipeBuilder WithCreateAt(DateTime createdAt)
+    {
+        _createdAt = createdAt;
+        return this;
+    }
+    
+    public RecipeBuilder WithRecipeAnalysisId(Guid recipeAnalysisId)
+    {
+        _recipeAnalysisId = recipeAnalysisId;
+        return this;
+    }
     
     public RecipeBuilder WithName(string name)
     {
@@ -67,9 +89,11 @@ public class RecipeBuilder
         _notes.AddRange(notes);
         return this;
     }
+    
     public Recipe Build()
     {
         return new Recipe(
+            _recipeAnalysisId,
             _name,
             _category,
             _prepTime,
@@ -79,6 +103,10 @@ public class RecipeBuilder
             _ingredients,
             _directions,
             _notes
-        );
+        )
+        {
+            Id = _id,
+            CreatedAt = _createdAt
+        };
     }
 }

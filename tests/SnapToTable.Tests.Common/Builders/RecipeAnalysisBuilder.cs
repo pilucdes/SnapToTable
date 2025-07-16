@@ -4,7 +4,6 @@ namespace SnapToTable.Tests.Common.Builders;
 
 public class RecipeAnalysisBuilder
 {
-    private readonly List<Recipe> _recipes = [];
     private Guid _id = Guid.Empty;
     private DateTime _createdAt = DateTime.MinValue;
 
@@ -20,17 +19,9 @@ public class RecipeAnalysisBuilder
         return this;
     }
     
-    public RecipeAnalysisBuilder WithRecipe(Action<RecipeBuilder> configureRecipe)
-    {
-        var builder = new RecipeBuilder();
-        configureRecipe(builder);
-        _recipes.Add(builder.Build());
-        return this;
-    }
-
     public RecipeAnalysis Build()
     {
-        var newRecipeAnalysis = new RecipeAnalysis(_recipes)
+        var newRecipeAnalysis = new RecipeAnalysis
         {
             Id = _id,
             CreatedAt = _createdAt

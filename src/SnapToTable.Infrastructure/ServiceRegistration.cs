@@ -34,6 +34,9 @@ public static class ServiceRegistration
             var settings = sp.GetRequiredService<MongoDbSettings>();
             return client.GetDatabase(settings.DatabaseName);
         });
+
+        services.AddSingleton<IMongoDbIndexInitializer,MongoDbIndexInitializer>();
+        services.AddHostedService<MongoDbInitializerHostedService>();
         
         services.AddScoped<IRecipeAnalysisRepository, RecipeAnalysisRepository>();
         services.AddScoped<IRecipeRepository, RecipeRepository>();
