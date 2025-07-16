@@ -2,7 +2,6 @@
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Mvc;
 using Shouldly;
-using SnapToTable.API.IntegrationTests.Builders;
 using SnapToTable.API.IntegrationTests.Fixtures;
 using SnapToTable.Application.DTOs;
 using SnapToTable.Infrastructure.Repositories;
@@ -11,7 +10,7 @@ using Xunit;
 
 namespace SnapToTable.API.IntegrationTests.Controllers;
 
-public class RecipeControllerTests : BaseApiTest
+public class RecipesControllerTests : BaseApiTest
 {
     private static string Url => "/api/v1/recipes";
 
@@ -20,37 +19,62 @@ public class RecipeControllerTests : BaseApiTest
     }
 
     [Fact]
-    public async Task Create_RecipeAnalysis_Should_Be_Created()
+    public async Task GetAll_Recipes_Should_Return_PagedResultOfRecipeDto()
     {
         // Arrange
-        var multipartContent = new MultipartFormDataContentBuilder()
-            .WithValidImage()
-            .Build();
-
-        var expectedRecipes = new RawRecipesDtoBuilder().Build();
-
-        MockOpenAiProvider.SetupSuccessResponse(expectedRecipes);
+        var recipesToInsert = Enumerable.Range(1, 3)
+            .Select(i => new RecipeBuilder()
+                .WithRecipeAnalysisId(Guid.NewGuid())
+                .WithName($"Name {i}")
+                .WithCategory($"Category {i}")
+                .WithServings(i)
+                .WithPrepTime(TimeSpan.FromMinutes(i))
+                .WithCookTime(TimeSpan.FromMinutes(2))
+                .WithAdditionalTime(TimeSpan.FromMinutes(3))
+                .WithIngredients(["First ingredient", "Second ingredient"])
+                .WithDirections(["Step 1", "Step 2"])
+                .WithNotes([$"First note {i}", $"Second note {i}"])
+                .Build()).ToList();
+        
+        await SeedDatabaseWithManyAsync(recipesToInsert,RecipeRepository.CollectionName);
 
         // Act
-        var response = await Client.PostAsync(Url, multipartContent);
+        var response = await Client.GetAsync($"{Url}");
 
         // Assert
         response.EnsureSuccessStatusCode();
 
-        var resultGuid = await response.Content.ReadFromJsonAsync<Guid>();
-        resultGuid.ShouldNotBe(Guid.Empty);
+        var pagedRecipesDto = await response.Content.ReadFromJsonAsync<PagedResultDto<RecipeDto>>();
+        pagedRecipesDto.ShouldNotBeNull();
+        pagedRecipesDto.Items.Count.ShouldBe(3);
+        
+        var recipesDto = pagedRecipesDto.Items;
+        
+        for (var i = 0; i < recipesDto.Count; i++)
+        {
+            var recipe = recipesDto[i];
+            var expected = recipesToInsert[i];
+        
+            recipe.Id.ShouldBe(expected.Id);
+            recipe.RecipeAnalysisId.ShouldBe(expected.RecipeAnalysisId);
+            recipe.Name.ShouldBe(expected.Name);
+            recipe.Category.ShouldBe(expected.Category);
+            recipe.Servings.ShouldBe(expected.Servings);
+            recipe.PrepTime.ShouldBe(expected.PrepTime);
+            recipe.CookTime.ShouldBe(expected.CookTime);
+            recipe.AdditionalTime.ShouldBe(expected.AdditionalTime);
+            recipe.Ingredients.ShouldBe(expected.Ingredients);
+            recipe.Directions.ShouldBe(expected.Directions);
+            recipe.Notes.ShouldBe(expected.Notes);
+        }
+       
     }
-
+    
     [Fact]
-    public async Task Create_WithInvalidContentType_Should_Return_BadRequest_WithValidationError()
+    public async Task GetAll_WithInvalidParam_Should_Return_Should_Return_BadRequest_WithValidationError()
     {
-        // Arrange
-        var multipartContent = new MultipartFormDataContentBuilder()
-            .WithInvalidImageContentType()
-            .Build();
-
         // Act
-        var response = await Client.PostAsync(Url, multipartContent);
+        var response = await Client.GetAsync($"{Url}?page=-1");
 
         // Assert
         response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
@@ -59,38 +83,35 @@ public class RecipeControllerTests : BaseApiTest
         result.ShouldNotBeNull();
         result.Title.ShouldBe("One or more validation errors occurred.");
     }
-
+    
     [Fact]
-    public async Task GetById_RecipeAnalysis_Should_Return_RecipeAnalysisDto()
+    public async Task GetById_Recipe_Should_Return_RecipeDto()
     {
         // Arrange
-        var recipeAnalysisToInsert = new RecipeAnalysisBuilder()
-            .WithRecipe(rb => rb
-                .WithName("Name 1")
-                .WithCategory("Category 1")
-                .WithServings(4)
-                .WithPrepTime(TimeSpan.FromMinutes(1))
-                .WithCookTime(TimeSpan.FromMinutes(2))
-                .WithAdditionalTime(TimeSpan.FromMinutes(3))
-                .WithIngredients(["First ingredient", "Second ingredient"])
-                .WithDirections(["Step 1", "Step 2"])
-                .WithNotes(["First note", "Second note"])
-            )
+        var recipeToInsert = new RecipeBuilder()
+            .WithRecipeAnalysisId(Guid.NewGuid())
+            .WithName("Name 1")
+            .WithCategory("Category 1")
+            .WithServings(4)
+            .WithPrepTime(TimeSpan.FromMinutes(1))
+            .WithCookTime(TimeSpan.FromMinutes(2))
+            .WithAdditionalTime(TimeSpan.FromMinutes(3))
+            .WithIngredients(["First ingredient", "Second ingredient"])
+            .WithDirections(["Step 1", "Step 2"])
+            .WithNotes(["First note", "Second note"])
             .Build();
 
-        await SeedDatabaseWithAsync(recipeAnalysisToInsert, RecipeAnalysisRepository.CollectionName);
+        await SeedDatabaseWithAsync(recipeToInsert, RecipeRepository.CollectionName);
 
         // Act
-        var response = await Client.GetAsync($"{Url}/{recipeAnalysisToInsert.Id}");
+        var response = await Client.GetAsync($"{Url}/{recipeToInsert.Id}");
 
         // Assert
         response.EnsureSuccessStatusCode();
 
-        var resultDto = await response.Content.ReadFromJsonAsync<RecipeAnalysisDto>();
-        resultDto.ShouldNotBeNull();
-        resultDto.Id.ShouldBe(recipeAnalysisToInsert.Id);
-        
-        var recipeDto = resultDto.Recipes.ShouldHaveSingleItem();
+        var recipeDto = await response.Content.ReadFromJsonAsync<RecipeDto>();
+        recipeDto.ShouldNotBeNull();
+        recipeDto.Id.ShouldBe(recipeToInsert.Id);
         recipeDto.Name.ShouldBe("Name 1");
         recipeDto.Category.ShouldBe("Category 1");
         recipeDto.Servings.ShouldBe(4);
@@ -101,9 +122,9 @@ public class RecipeControllerTests : BaseApiTest
         recipeDto.Directions.ShouldBe(["Step 1", "Step 2"]);
         recipeDto.Notes.ShouldBe(["First note", "Second note"]);
     }
-    
+
     [Fact]
-    public async Task GetById_WithInvalidGuid_Should_Return_BadRequest_WithValidationError()
+    public async Task GetById_WithInvalidParam_Should_Return_BadRequest_WithValidationError()
     {
         // Act
         var response = await Client.GetAsync($"{Url}/{Guid.Empty}");

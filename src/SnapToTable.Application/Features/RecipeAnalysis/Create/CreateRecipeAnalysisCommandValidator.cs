@@ -7,12 +7,12 @@ public class CreateRecipeAnalysisCommandValidator : AbstractValidator<CreateReci
 {
     public CreateRecipeAnalysisCommandValidator()
     {
-        RuleFor(x => x.Images)
+        RuleFor(query => query.Images)
             .NotEmpty().WithMessage("At least one image is required.")
             .Must(images => images.Count <= 2)
             .WithMessage("A maximum of 2 images can be uploaded at a time.");
         
-        RuleForEach(x => x.Images)
+        RuleForEach(query => query.Images)
             .SetValidator(new ImageInputValidator());
     }
 }

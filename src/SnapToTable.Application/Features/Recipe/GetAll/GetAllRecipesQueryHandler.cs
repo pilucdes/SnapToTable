@@ -18,14 +18,17 @@ public class GetAllRecipesQueryHandler : IRequestHandler<GetAllRecipesQuery,
         CancellationToken cancellationToken)
     {
         var pagedResult =
-            await _repository.GetPagedAsync(request.Filter, request.RecipeAnalysisId, p => p, request.PageNumber,
+            await _repository.GetPagedAsync(request.Filter, request.RecipeAnalysisId, p => p, request.Page,
                 request.PageSize);
 
-        var dtoItems = pagedResult.Items.Select(r => new RecipeDto(r.Name, r.Category, r.PrepTime, r.CookTime,
+        var dtoItems = pagedResult.Items.Select(r => new RecipeDto(
+            r.Id, r.CreatedAt, r.RecipeAnalysisId,
+            r.Name, r.Category, r.PrepTime,
+            r.CookTime,
             r.AdditionalTime,
             r.Servings, r.Ingredients, r.Directions, r.Notes)).ToList();
 
-        return new PagedResultDto<RecipeDto>(dtoItems, pagedResult.TotalCount, request.PageNumber,
+        return new PagedResultDto<RecipeDto>(dtoItems, pagedResult.TotalCount, request.Page,
             request.PageSize);
     }
 }

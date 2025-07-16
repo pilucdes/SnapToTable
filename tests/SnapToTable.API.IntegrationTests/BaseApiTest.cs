@@ -59,4 +59,12 @@ public abstract class BaseApiTest : IAsyncLifetime
     {
         await _database.GetCollection<T>(collectionName).InsertOneAsync(entity);
     }
+    
+    protected async Task SeedDatabaseWithManyAsync<T>(IReadOnlyList<T> entities,string collectionName) where T : class
+    {
+        if (!entities.Any())
+            return;
+        
+        await _database.GetCollection<T>(collectionName).InsertManyAsync(entities);
+    }
 }

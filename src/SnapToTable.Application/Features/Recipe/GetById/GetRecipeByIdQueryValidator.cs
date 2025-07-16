@@ -6,7 +6,7 @@ public class GetRecipeByIdQueryValidator : AbstractValidator<GetRecipeByIdQuery>
 {
     public GetRecipeByIdQueryValidator()
     {
-        RuleFor(x => x.Id)
+        RuleFor(query => query.Id)
             .NotEmpty().WithMessage("Id cannot be empty");
 
     }

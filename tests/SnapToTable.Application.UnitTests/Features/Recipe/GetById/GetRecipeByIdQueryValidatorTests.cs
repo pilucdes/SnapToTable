@@ -1,8 +1,8 @@
 ﻿using FluentValidation.TestHelper;
-using SnapToTable.Application.Features.RecipeAnalysis.GetById;
+using SnapToTable.Application.Features.Recipe.GetById;
 using Xunit;
 
-namespace SnapToTable.Application.UnitTests.Features.RecipeAnalysis.GetById;
+namespace SnapToTable.Application.UnitTests.Features.Recipe.GetById;
 
 public class GetRecipeByIdQueryValidatorTests
 {

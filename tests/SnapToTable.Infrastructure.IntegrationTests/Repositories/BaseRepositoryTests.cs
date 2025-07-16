@@ -47,26 +47,43 @@ public class BaseRepositoryTests : BaseTest
         // Arrange
         var entity1 = new EntityTest("added1", 1);
         var entity2 = new EntityTest("added2", 2);
-
+        var sortOrder = new SortDescriptor<EntityTest>(e => e.Number, SortDirection.Ascending);
         var initialCreationDate = DateTime.UtcNow;
 
         // Act
         await _repository.AddRangeAsync([entity1, entity2]);
 
         // Assert
-        var pagedEntities = await _repository.GetPagedAsync(1, 5, p => p);
+        var pagedEntities = await _repository.GetPagedAsync(1, 5, p => p, sortOrder: sortOrder);
         pagedEntities.TotalPages.ShouldBe(1);
         pagedEntities.TotalCount.ShouldBe(2);
         pagedEntities.Items.ShouldNotBeEmpty();
         pagedEntities.Items[0].Id.ShouldBe(entity1.Id);
         pagedEntities.Items[0].Name.ShouldBe(entity1.Name);
         pagedEntities.Items[0].CreatedAt.ShouldBe(initialCreationDate, tolerance: TimeSpan.FromSeconds(1));
-        
+
         pagedEntities.Items[1].Id.ShouldBe(entity2.Id);
         pagedEntities.Items[1].Name.ShouldBe(entity2.Name);
         pagedEntities.Items[1].CreatedAt.ShouldBe(initialCreationDate, tolerance: TimeSpan.FromSeconds(1));
     }
 
+    [Fact]
+    public async Task AddRangeAsync_GivenNoEntities_ShouldNotAddEntities()
+    {
+        // Arrange
+        var entity1 = new EntityTest("added1", 1);
+        var sortOrder = new SortDescriptor<EntityTest>(e => e.Number, SortDirection.Ascending);
+        var initialCreationDate = DateTime.UtcNow;
+
+        // Act
+        await _repository.AddRangeAsync([]);
+
+        // Assert
+        var pagedEntities = await _repository.GetPagedAsync(1, 5, p => p, sortOrder: sortOrder);
+        pagedEntities.TotalPages.ShouldBe(0);
+        pagedEntities.TotalCount.ShouldBe(0);
+    }
+    
     [Fact]
     public async Task GetByIdAsync_GivenExistingEntity_ShouldGetRelatedEntity()
     {
@@ -111,17 +128,17 @@ public class BaseRepositoryTests : BaseTest
 
         // Assert - Page 1
         page1Result.ShouldNotBeNull();
-        page1Result.PageNumber.ShouldBe(1);
+        page1Result.Page.ShouldBe(1);
         page1Result.PageSize.ShouldBe(pageSize);
         page1Result.TotalCount.ShouldBe(totalEntities);
         page1Result.TotalPages.ShouldBe(2);
         page1Result.Items.Count.ShouldBe(pageSize);
-        page1Result.Items.Select(item => item.Number).ShouldBe(new[] { 1, 2, 3, 4, 5 });
+        page1Result.Items.Select(item => item.Number).ShouldBe([1, 2, 3, 4, 5]);
 
         // Assert - Page 2
         page2Result.ShouldNotBeNull();
         page2Result.Items.Count.ShouldBe(pageSize);
-        page2Result.Items.Select(item => item.Number).ShouldBe(new[] { 6, 7, 8, 9, 10 });
+        page2Result.Items.Select(item => item.Number).ShouldBe([6, 7, 8, 9, 10]);
 
         // Assert - No overlap between pages
         var page1Ids = page1Result.Items.Select(item => item.Id);
@@ -201,7 +218,7 @@ public class BaseRepositoryTests : BaseTest
         pagedResult.Items.ShouldBeEmpty();
         pagedResult.TotalCount.ShouldBe(0);
         pagedResult.TotalPages.ShouldBe(0);
-        pagedResult.PageNumber.ShouldBe(1);
+        pagedResult.Page.ShouldBe(1);
     }
 
     private async Task<List<EntityTest>> SeedEntitiesAsync(int count)
@@ -210,10 +227,7 @@ public class BaseRepositoryTests : BaseTest
             .Select(i => new EntityTest($"Entity Name {i}", i))
             .ToList();
 
-        if (entities.Any())
-        {
-            await Database.GetCollection<EntityTest>(CollectionName).InsertManyAsync(entities);
-        }
+        await SeedDatabaseWithManyAsync(entities, CollectionName);
 
         return entities;
     }

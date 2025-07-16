@@ -4,7 +4,7 @@ namespace SnapToTable.Tests.Common.Builders;
 
 public class RecipeBuilder
 {
-    private Guid _id = Guid.NewGuid();
+    private Guid _id = Guid.Empty;
     private Guid _recipeAnalysisId = Guid.NewGuid();
     private DateTime _createdAt = DateTime.MinValue;
     private string _name = "Default Test Recipe";
@@ -24,7 +24,7 @@ public class RecipeBuilder
         return this;
     }
     
-    public RecipeBuilder WithCreateAt(DateTime createdAt)
+    public RecipeBuilder WithCreatedAt(DateTime createdAt)
     {
         _createdAt = createdAt;
         return this;

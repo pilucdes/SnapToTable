@@ -21,11 +21,12 @@ public class CreateRecipeAnalysisCommandHandler : IRequestHandler<CreateRecipeAn
 
     public async Task<Guid> Handle(CreateRecipeAnalysisCommand request, CancellationToken cancellationToken)
     {
-        var extractedRecipes = await _aiRecipeExtractionService.GetRecipeFromImagesAsync(request.Images, cancellationToken);
+        var extractedRecipes =
+            await _aiRecipeExtractionService.GetRecipeFromImagesAsync(request.Images, cancellationToken);
 
         var newAnalysis = new Domain.Entities.RecipeAnalysis();
         await _analysisRepository.AddAsync(newAnalysis);
-        
+
         var recipes = extractedRecipes.Select(recipe =>
             new Domain.Entities.Recipe(
                 newAnalysis.Id,
@@ -38,9 +39,9 @@ public class CreateRecipeAnalysisCommandHandler : IRequestHandler<CreateRecipeAn
                 recipe.Ingredients,
                 recipe.Directions,
                 recipe.Notes)).ToList();
-        
+
         await _recipeRepository.AddRangeAsync(recipes);
-        
+
         return newAnalysis.Id;
     }
 }

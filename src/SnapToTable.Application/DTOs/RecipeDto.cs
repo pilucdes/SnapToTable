@@ -1,5 +1,8 @@
 ﻿namespace SnapToTable.Application.DTOs;
 public record RecipeDto(
+    Guid Id,
+    DateTime CreatedAt,
+    Guid RecipeAnalysisId,
     string Name,
     string Category,
     TimeSpan? PrepTime,

@@ -28,16 +28,17 @@ public class BaseRepository<T> : IRepository<T> where T : BaseEntity
         await _collection.InsertOneAsync(entity);
     }
 
-    public virtual async Task AddRangeAsync(IEnumerable<T> entities)
+    public virtual async Task AddRangeAsync(IReadOnlyList<T> entities)
     {
-        var entityList = entities.ToList();
+        if (!entities.Any())
+            return;
         
-        foreach (var entity in entityList)
+        foreach (var entity in entities)
         {
             entity.CreatedAt = DateTime.UtcNow;
         }
 
-        await _collection.InsertManyAsync(entityList);
+        await _collection.InsertManyAsync(entities);
     }
 
 
