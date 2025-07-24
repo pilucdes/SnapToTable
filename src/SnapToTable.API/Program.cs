@@ -25,6 +25,17 @@ builder.Services.AddApiVersioning(opt =>
     opt.ReportApiVersions = true;
 });
 
+builder.Services.AddCors(options =>
+{
+    if (builder.Environment.IsDevelopment())
+    {
+        options.AddDefaultPolicy(policy =>
+            policy.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
+    }
+});
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -37,6 +48,7 @@ app.UseMiddleware<GlobalErrorHandler>();
 app.UseAuthorization();
 
 app.MapControllers();
+app.UseCors();
 
 app.Run();
 

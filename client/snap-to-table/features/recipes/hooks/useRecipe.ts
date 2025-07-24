@@ -1,7 +1,8 @@
 ﻿import {useQuery, useMutation} from '@tanstack/react-query';
-import {getRecipes, postRecipeAnalysis} from '../api/api';
+import {getRecipes, postRecipeAnalysis} from '../api/recipeApi';
 import GetAllRecipesRequestDto from '../api/dto/getAllRecipesRequestDto';
 import CreateRecipeAnalysisRequestDto from '../api/dto/createRecipeAnalysisRequestDto';
+import {router} from 'expo-router';
 
 export const useGetAllRecipes = (params: GetAllRecipesRequestDto) => {
     return useQuery({
@@ -10,11 +11,13 @@ export const useGetAllRecipes = (params: GetAllRecipesRequestDto) => {
     })
 }
 
-export const usePostRecipeAnalysis = () => {
+export const useCreateRecipeAnalysis = () => {
     return useMutation({
         mutationFn: (payload: CreateRecipeAnalysisRequestDto) => postRecipeAnalysis(payload),
-        onSuccess: (data) => {
-            console.log('Post created successfully:', data);
+        onSuccess: (analysisId) => {
+            console.log('Post created successfully:', analysisId);
+
+            router.push(`/recipes/recipes?recipeAnalysisId=${analysisId}`);
         },
         onError: (error: Error) => {
             console.error('Failed to create post:', error.message);
