@@ -1,9 +1,13 @@
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import {Stack} from "expo-router";
-import "../styles/global.css"
+import tw from "@/lib/tailwind";
+import { useDeviceContext } from "twrnc";
 
 const queryClient = new QueryClient();
 export default function RootLayout() {
+    
+    useDeviceContext(tw);
+    
     return (
         <QueryClientProvider client={queryClient}>
             <Stack>

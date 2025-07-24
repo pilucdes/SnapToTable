@@ -1,37 +1,31 @@
-﻿import {useGetAllRecipes} from "@/features/recipes/hooks/useRecipe";
-import {useLocalSearchParams} from "expo-router";
-import {ActivityIndicator, Pressable, SafeAreaView, Text, View} from "react-native";
+﻿import { RecipeCard } from "@/features/recipes/components/RecipeCard";
+import { useGetAllRecipes } from "@/features/recipes/hooks/useRecipe";
+import { useLocalSearchParams } from "expo-router";
+import { ActivityIndicator, SafeAreaView, Text, ScrollView } from "react-native";
+import tw from "@/lib/tailwind";
 
 export default function RecipeListScreen() {
-
-    const {recipeAnalysisId} = useLocalSearchParams<{ recipeAnalysisId: string }>();
-    const {data, isLoading, error} = useGetAllRecipes({recipeAnalysisId, filter: "", pageSize: 20, page: 1});
+    const { recipeAnalysisId } = useLocalSearchParams<{ recipeAnalysisId: string }>();
+    const { data, isLoading, error } = useGetAllRecipes({ recipeAnalysisId, filter: "", pageSize: 20, page: 1 });
 
     return (
-        <SafeAreaView className="flex-1 bg-zinc-900">
-            <View className="flex-1 items-center justify-center gap-3 p-8">
-                {
-                    isLoading ? (
-                        <ActivityIndicator size="large"/>
-                    ) : (data?.items.map((recipe, index) => (
-                        <Pressable id={recipe.id}
-                                   className="w-full max-w-96 shadow-sm dark:bg-gray-800 rounded-lg p-6 hover:dark:bg-gray-700">
-                            <Text className="text-2xl dark:text-white font-bold">{recipe.name}</Text>
-                            <Text className="text-xl dark:text-white">{recipe.category}</Text>
-                            {recipe.ingredients.map((ingredient) => (
-                                <Text className="text-md dark:text-white">• {ingredient}</Text>
-                            ))}
-                        </Pressable>
-                    )))
-                }
+        <SafeAreaView style={tw`flex-1 bg-gray-100 dark:bg-zinc-900`}>
+            
+            <ScrollView contentContainerStyle={tw`items-center gap-4 p-6`}>
+                {isLoading ? (
+                    <ActivityIndicator size="large" style={tw`mt-20`} />
+                ) : (
+                    data?.items.map((recipe) => (
+                        <RecipeCard key={recipe.id} recipe={recipe} />
+                    ))
+                )}
 
                 {error && (
-                    <Text className="text-red-400 mt-6 text-center">
+                    <Text style={tw`text-red-400 mt-6 text-center`}>
                         {error.message}
                     </Text>
                 )}
-            </View>
-
+            </ScrollView>
         </SafeAreaView>
     );
 }

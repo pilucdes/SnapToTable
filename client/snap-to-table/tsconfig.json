@@ -6,12 +6,7 @@
       "@/*": [
         "./*"
       ]
-    },
-    "plugins": [
-      {
-        "name": "expo-router/babel"
-      }
-    ]
+    }
   },
   "include": [
     "**/*.ts",

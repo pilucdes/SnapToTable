@@ -1,9 +1,9 @@
-// app/index.tsx
-import {Text, View, Pressable, ActivityIndicator, SafeAreaView} from 'react-native';
-import {Camera} from 'lucide-react-native';
-import {useCreateRecipeAnalysis} from '../features/recipes/hooks/useRecipe';
-import {useRecipeImagePicker} from '@/features/recipes/hooks/useRecipeImagePicker';
-import CreateRecipeAnalysisRequestDto from '@/features/recipes/api/dto/createRecipeAnalysisRequestDto';
+import {Text, View, Pressable, ActivityIndicator, SafeAreaView} from "react-native";
+import {Camera} from "lucide-react-native";
+import {useCreateRecipeAnalysis} from "../features/recipes/hooks/useRecipe";
+import {useRecipeImagePicker} from "@/features/recipes/hooks/useRecipeImagePicker";
+import CreateRecipeAnalysisRequestDto from "@/features/recipes/api/dto/createRecipeAnalysisRequestDto";
+import tw from "@/lib/tailwind"
 
 export default function IndexScreen() {
 
@@ -37,27 +37,28 @@ export default function IndexScreen() {
     }
 
     return (
-        <SafeAreaView className="flex-1 dark:bg-zinc-900">
+        <SafeAreaView style={tw`flex-1 dark:bg-zinc-900`}>
 
-            <View className="flex-1 items-center justify-center p-8">
-
-                <Text className="text-4xl font-semibold text-center mb-10 dark:text-white">
-                    {isPending ? "Creating new recipes...": "Any new recipe needed for today ?"}
+            <View style={tw`flex-1 items-center justify-center p-8`}>
+                <Text style={tw`text-4xl font-semibold text-center mb-10 dark:text-white`}>
+                    {isPending ? "Creating new recipes..." : "Any new recipe needed for today ?"}
                 </Text>
 
                 <Pressable
                     disabled={isPending}
                     onPress={handleSnapPress}
-                    className="flex-row items-center justify-center bg-indigo-600 px-8 py-4 rounded-xl shadow-lg
-                     active:bg-indigo-700
-                     disabled:opacity-50"
+                    style={({pressed}) => tw.style(
+                        `flex-row items-center justify-center px-8 py-4 rounded-xl shadow-lg`,
+                        pressed ? `bg-indigo-700` : `bg-indigo-600`,
+                        isPending && `opacity-50`
+                    )}
                 >
                     {isPending ? (
                         <ActivityIndicator size="small" color="white"/>
                     ) : (
                         <>
-                            <Camera size={24} className="mr-3 dark:text-white"/>
-                            <Text className="text-lg font-bold dark:text-white">
+                            <Camera size={24} style={tw`mr-3 text-white`}/>
+                            <Text style={tw`text-lg font-bold text-white`}>
                                 Snap a recipe
                             </Text>
                         </>
@@ -65,11 +66,10 @@ export default function IndexScreen() {
                 </Pressable>
 
                 {error && (
-                    <Text className="text-red-400 mt-6 text-center">
+                    <Text style={tw`text-red-400 mt-6 text-center`}>
                         {error.message}
                     </Text>
                 )}
-
             </View>
         </SafeAreaView>
     );
