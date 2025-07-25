@@ -1,6 +1,6 @@
 ﻿import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
-import tw from 'twrnc';
+import tw from "@/lib/tailwind"
 import Recipe from '../types/recipe';
 
 interface RecipeCardProps {
@@ -8,7 +8,7 @@ interface RecipeCardProps {
 }
 
 export const RecipeCard = ({ recipe }: RecipeCardProps) => {
-    // 1. Manage hover state within the component itself
+    
     const [isHovered, setIsHovered] = useState(false);
 
     return (

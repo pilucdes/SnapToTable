@@ -23,4 +23,4 @@ export const useCreateRecipeAnalysis = () => {
             console.error('Failed to create post:', error.message);
         }
     })
-} 
+}
