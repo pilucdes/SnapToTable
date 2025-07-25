@@ -9,4 +9,4 @@ public record GetAllRecipesQuery(
     string? Filter,
     int Page,
     int PageSize = 20)
-    : IPaginatedQuery, IRequest<PagedResultDto<RecipeDto>>;
+    : IPaginatedQuery, IRequest<PagedResultDto<RecipeSummaryDto>>;

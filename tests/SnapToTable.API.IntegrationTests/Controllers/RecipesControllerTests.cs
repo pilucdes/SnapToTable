@@ -19,7 +19,7 @@ public class RecipesControllerTests : BaseApiTest
     }
 
     [Fact]
-    public async Task GetAll_Recipes_Should_Return_PagedResultOfRecipeDto()
+    public async Task GetAll_Recipes_Should_Return_PagedResultOfRecipeSummaryDto()
     {
         // Arrange
         var recipesToInsert = Enumerable.Range(1, 3)
@@ -44,7 +44,7 @@ public class RecipesControllerTests : BaseApiTest
         // Assert
         response.EnsureSuccessStatusCode();
 
-        var pagedRecipesDto = await response.Content.ReadFromJsonAsync<PagedResultDto<RecipeDto>>();
+        var pagedRecipesDto = await response.Content.ReadFromJsonAsync<PagedResultDto<RecipeSummaryDto>>();
         pagedRecipesDto.ShouldNotBeNull();
         pagedRecipesDto.Items.Count.ShouldBe(3);
         
@@ -59,13 +59,7 @@ public class RecipesControllerTests : BaseApiTest
             recipe.RecipeAnalysisId.ShouldBe(expected.RecipeAnalysisId);
             recipe.Name.ShouldBe(expected.Name);
             recipe.Category.ShouldBe(expected.Category);
-            recipe.Servings.ShouldBe(expected.Servings);
-            recipe.PrepTime.ShouldBe(expected.PrepTime);
-            recipe.CookTime.ShouldBe(expected.CookTime);
-            recipe.AdditionalTime.ShouldBe(expected.AdditionalTime);
             recipe.Ingredients.ShouldBe(expected.Ingredients);
-            recipe.Directions.ShouldBe(expected.Directions);
-            recipe.Notes.ShouldBe(expected.Notes);
         }
        
     }

@@ -1,7 +1,9 @@
-﻿using Moq;
+﻿using System.Linq.Expressions;
+using Moq;
 using Shouldly;
 using SnapToTable.Application.Features.Recipe.GetAll;
 using SnapToTable.Domain.Common;
+using SnapToTable.Domain.Entities;
 using SnapToTable.Domain.Repositories;
 using SnapToTable.Tests.Common.Builders;
 using Xunit;
@@ -49,13 +51,21 @@ public class GetAllRecipesQueryHandlerTests
             .WithNotes([])
             .Build();
 
-        var recipeEntities = new List<Domain.Entities.Recipe> { tomatoSoup, chickenSoup };
+        var recipeEntities = new List<RecipeSummary>
+        {
+            new(tomatoSoup.RecipeAnalysisId, tomatoSoup.Name, tomatoSoup.Category,
+                tomatoSoup.Ingredients),
+            new(chickenSoup.RecipeAnalysisId, chickenSoup.Name, chickenSoup.Category,
+                chickenSoup.Ingredients)
+        };
 
         var pagedResultFromRepo =
-            new PagedResult<Domain.Entities.Recipe>(recipeEntities, 50, 1, 20);
+            new PagedResult<RecipeSummary>(recipeEntities, 50, 1, 20);
 
         _repositoryMock
-            .Setup(repo => repo.GetPagedAsync(query.Filter, query.RecipeAnalysisId, p => p, query.Page, query.PageSize))
+            .Setup(repo => repo.GetPagedAsync(query.Filter, query.RecipeAnalysisId,
+                It.IsAny<Expression<Func<Domain.Entities.Recipe, RecipeSummary>>>(), query.Page,
+                query.PageSize))
             .ReturnsAsync(pagedResultFromRepo);
 
         // --- Act ---
@@ -77,14 +87,11 @@ public class GetAllRecipesQueryHandlerTests
         firstDto.RecipeAnalysisId.ShouldBe(firstEntity.RecipeAnalysisId);
         firstDto.Name.ShouldBe(firstEntity.Name);
         firstDto.Category.ShouldBe(firstEntity.Category);
-        firstDto.PrepTime.ShouldBe(firstEntity.PrepTime);
-        firstDto.Servings.ShouldBe(firstEntity.Servings);
         firstDto.Ingredients.ShouldBe(firstEntity.Ingredients);
-        firstDto.Directions.ShouldBe(firstEntity.Directions);
-        firstDto.Notes.ShouldBe(firstEntity.Notes);
 
         _repositoryMock.Verify(
-            repo => repo.GetPagedAsync(query.Filter, query.RecipeAnalysisId, p => p, query.Page, query.PageSize),
+            repo => repo.GetPagedAsync(query.Filter, query.RecipeAnalysisId,
+                It.IsAny<Expression<Func<Domain.Entities.Recipe, RecipeSummary>>>(), query.Page, query.PageSize),
             Times.Once);
     }
 
@@ -100,7 +107,7 @@ public class GetAllRecipesQueryHandlerTests
 
         // Act
         await _handler.Handle(query, CancellationToken.None);
-        
+
         // Assert
         _repositoryMock.Verify(
             repo => repo.GetPagedAsync(query.Filter, query.RecipeAnalysisId, p => p, query.Page, query.PageSize),

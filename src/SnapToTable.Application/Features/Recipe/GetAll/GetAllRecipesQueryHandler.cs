@@ -1,11 +1,12 @@
 ﻿using MediatR;
 using SnapToTable.Application.DTOs;
+using SnapToTable.Domain.Entities;
 using SnapToTable.Domain.Repositories;
 
 namespace SnapToTable.Application.Features.Recipe.GetAll;
 
 public class GetAllRecipesQueryHandler : IRequestHandler<GetAllRecipesQuery,
-    PagedResultDto<RecipeDto>>
+    PagedResultDto<RecipeSummaryDto>>
 {
     private readonly IRecipeRepository _repository;
 
@@ -14,21 +15,20 @@ public class GetAllRecipesQueryHandler : IRequestHandler<GetAllRecipesQuery,
         _repository = repository;
     }
 
-    public async Task<PagedResultDto<RecipeDto>> Handle(GetAllRecipesQuery request,
+    public async Task<PagedResultDto<RecipeSummaryDto>> Handle(GetAllRecipesQuery request,
         CancellationToken cancellationToken)
     {
         var pagedResult =
-            await _repository.GetPagedAsync(request.Filter, request.RecipeAnalysisId, p => p, request.Page,
+            await _repository.GetPagedAsync(request.Filter, request.RecipeAnalysisId,
+                p => new RecipeSummary(p.RecipeAnalysisId, p.Name, p.Category, p.Ingredients)
+                    { Id = p.Id, CreatedAt = p.CreatedAt }, request.Page,
                 request.PageSize);
 
-        var dtoItems = pagedResult.Items.Select(r => new RecipeDto(
+        var dtoItems = pagedResult.Items.Select(r => new RecipeSummaryDto(
             r.Id, r.CreatedAt, r.RecipeAnalysisId,
-            r.Name, r.Category, r.PrepTime,
-            r.CookTime,
-            r.AdditionalTime,
-            r.Servings, r.Ingredients, r.Directions, r.Notes)).ToList();
+            r.Name, r.Category, r.Ingredients)).ToList();
 
-        return new PagedResultDto<RecipeDto>(dtoItems, pagedResult.TotalCount, request.Page,
+        return new PagedResultDto<RecipeSummaryDto>(dtoItems, pagedResult.TotalCount, request.Page,
             request.PageSize);
     }
 }
