@@ -1,3 +1,3 @@
-﻿export default interface CreateRecipeAnalysisRequestDto {
+﻿export interface CreateRecipeAnalysisRequestDto {
     images:Blob[]
 }

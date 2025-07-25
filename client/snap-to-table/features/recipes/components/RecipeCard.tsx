@@ -1,18 +1,24 @@
-﻿import { useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+﻿import {useState} from 'react';
+import {Pressable, Text, View} from 'react-native';
 import tw from "@/lib/tailwind"
-import Recipe from '../types/recipe';
+import {RecipeSummary} from '../types';
+import { router } from 'expo-router';
 
 interface RecipeCardProps {
-    recipe: Recipe;
+    recipe: RecipeSummary;
 }
 
-export const RecipeCard = ({ recipe }: RecipeCardProps) => {
-    
+export const RecipeCard = ({recipe}: RecipeCardProps) => {
+
     const [isHovered, setIsHovered] = useState(false);
+
+    const onPress = (id: string) => {
+        router.push(`/recipes/${id}`);
+    }
 
     return (
         <Pressable
+            onPress={() => onPress(recipe.id)}
             onHoverIn={() => setIsHovered(true)}
             onHoverOut={() => setIsHovered(false)}
             style={tw.style(

@@ -1,11 +1,12 @@
-﻿import PagedResult from "../types/pagedResult";
-import Recipe from "../types/recipe";
-import PagedResultDto from "./dto/pagedResultDto";
-import RecipeDto from "./dto/recipeDto";
+﻿import {PagedResult, Recipe, RecipeSummary } from '../types';
+import {
+    PagedResultDto,
+    RecipeDto,
+    RecipeSummaryDto,
+} from './dto';
 
 const parseDurationToMinutes = (duration: string | null): number | null => {
     if (!duration) return null;
-    // e.g., "PT30M" -> 30, "PT1H15M" -> 75
     const matches = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?/);
     if (!matches) return null;
     const hours = parseInt(matches[1] || '0', 10);
@@ -39,6 +40,17 @@ export const mapRecipeDtoToRecipe = (dto: RecipeDto): Recipe => {
         cookTimeInMinutes,
         additionalTimeInMinutes,
         totalTimeInMinutes
+    };
+};
+
+export const mapRecipeSummaryDtoToRecipeSummary = (dto: RecipeSummaryDto): RecipeSummary => {
+    return {
+        id: dto.id,
+        createdAt: new Date(dto.createdAt),
+        recipeAnalysisId: dto.recipeAnalysisId,
+        name: dto.name,
+        category: dto.category,
+        ingredients: dto.ingredients,
     };
 };
 

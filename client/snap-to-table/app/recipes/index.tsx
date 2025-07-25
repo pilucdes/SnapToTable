@@ -4,7 +4,7 @@ import { useLocalSearchParams } from "expo-router";
 import { ActivityIndicator, SafeAreaView, Text, ScrollView } from "react-native";
 import tw from "@/lib/tailwind";
 
-export default function RecipeListScreen() {
+export default function RecipesScreen() {
     const { recipeAnalysisId } = useLocalSearchParams<{ recipeAnalysisId: string }>();
     const { data, isLoading, error } = useGetAllRecipes({ recipeAnalysisId, filter: "", pageSize: 20, page: 1 });
 

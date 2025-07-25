@@ -1,4 +1,4 @@
-﻿export default interface RecipeDto {
+﻿export interface RecipeDto {
     id: string;
     createdAt: string;
     recipeAnalysisId: string;

@@ -12,7 +12,8 @@ export default function RootLayout() {
         <QueryClientProvider client={queryClient}>
             <Stack>
                 <Stack.Screen name="index" options={{headerShown: false}} />
-                <Stack.Screen name="recipes/recipes" options={{headerShown: false}} />
+                <Stack.Screen name="recipes/[id]" options={{headerShown: false}} />
+                <Stack.Screen name="recipes/index" options={{headerShown: false}} />
             </Stack>
         </QueryClientProvider>
     );

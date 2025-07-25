@@ -1,4 +1,4 @@
-﻿export default class PagedResult<T> {
+﻿export class PagedResult<T> {
     public readonly items: readonly T[];
     public readonly totalCount: number;
     public readonly page: number;

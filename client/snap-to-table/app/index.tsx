@@ -2,10 +2,10 @@ import {Text, View, Pressable, ActivityIndicator, SafeAreaView} from "react-nati
 import {Camera} from "lucide-react-native";
 import {useCreateRecipeAnalysis} from "../features/recipes/hooks/useRecipe";
 import {useRecipeImagePicker} from "@/features/recipes/hooks/useRecipeImagePicker";
-import CreateRecipeAnalysisRequestDto from "@/features/recipes/api/dto/createRecipeAnalysisRequestDto";
 import tw from "@/lib/tailwind"
+import { CreateRecipeAnalysisRequestDto } from "@/features/recipes/api/dto";
 
-export default function IndexScreen() {
+export default function HomeScreen() {
 
     const {mutate: createRecipeAnalysis, error, isPending} = useCreateRecipeAnalysis();
     const {snapImages} = useRecipeImagePicker();
