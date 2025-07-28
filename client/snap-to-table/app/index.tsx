@@ -1,9 +1,10 @@
-import {Text, View, Pressable, ActivityIndicator, SafeAreaView} from "react-native";
-import {Camera} from "lucide-react-native";
+import {Text, View, ActivityIndicator, SafeAreaView} from "react-native";
+import {Feather} from '@expo/vector-icons';
 import {useCreateRecipeAnalysis} from "../features/recipes/hooks/useRecipe";
 import {useRecipeImagePicker} from "@/features/recipes/hooks/useRecipeImagePicker";
 import tw from "@/lib/tailwind"
-import { CreateRecipeAnalysisRequestDto } from "@/features/recipes/api/dto";
+import {CreateRecipeAnalysisRequestDto} from "@/features/recipes/api/dto";
+import {ThemeButton, ThemeText} from "@/features/common/components";
 
 export default function HomeScreen() {
 
@@ -40,30 +41,28 @@ export default function HomeScreen() {
         <SafeAreaView style={tw`flex-1 dark:bg-zinc-900`}>
 
             <View style={tw`flex-1 items-center justify-center p-8`}>
-                <Text style={tw`text-4xl font-semibold text-center mb-10 dark:text-white`}>
+                <ThemeText variant="title" style={tw`text-4xl font-semibold text-center mb-10`}>
                     {isPending ? "Creating new recipes..." : "Any new recipe needed for today ?"}
-                </Text>
+                </ThemeText>
 
-                <Pressable
+                <ThemeButton
                     disabled={isPending}
                     onPress={handleSnapPress}
-                    style={({pressed}) => tw.style(
-                        `flex-row items-center justify-center px-8 py-4 rounded-xl shadow-lg`,
-                        pressed ? `bg-indigo-700` : `bg-indigo-600`,
-                        isPending && `opacity-50`
+                    style={tw.style(
+                        `flex-row items-center justify-center px-8 py-4 rounded-xl shadow-lg`
                     )}
                 >
                     {isPending ? (
                         <ActivityIndicator size="small" color="white"/>
                     ) : (
                         <>
-                            <Camera size={24} style={tw`mr-3 text-white`}/>
+                            <Feather name="camera" size={24} style={tw`mr-3 text-white`}/>
                             <Text style={tw`text-lg font-bold text-white`}>
                                 Snap a recipe
                             </Text>
                         </>
                     )}
-                </Pressable>
+                </ThemeButton>
 
                 {error && (
                     <Text style={tw`text-red-400 mt-6 text-center`}>
