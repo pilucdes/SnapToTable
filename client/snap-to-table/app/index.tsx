@@ -4,7 +4,7 @@ import {useCreateRecipeAnalysis} from "../features/recipes/hooks/useRecipe";
 import {useRecipeImagePicker} from "@/features/recipes/hooks/useRecipeImagePicker";
 import tw from "@/lib/tailwind"
 import {CreateRecipeAnalysisRequestDto} from "@/features/recipes/api/dto";
-import {ThemeButton, ThemeText} from "@/features/common/components";
+import {ThemeButton, ThemeSafeAreaView, ThemeText} from "@/features/common/components";
 
 export default function HomeScreen() {
 
@@ -38,7 +38,7 @@ export default function HomeScreen() {
     }
 
     return (
-        <SafeAreaView style={tw`flex-1 dark:bg-zinc-900`}>
+        <ThemeSafeAreaView>
 
             <View style={tw`flex-1 items-center justify-center p-8`}>
                 <ThemeText variant="title" style={tw`text-4xl font-semibold text-center mb-10`}>
@@ -65,11 +65,11 @@ export default function HomeScreen() {
                 </ThemeButton>
 
                 {error && (
-                    <Text style={tw`text-red-400 mt-6 text-center`}>
+                    <ThemeText variant="error" style={tw`mt-6 text-center`}>
                         {error.message}
-                    </Text>
+                    </ThemeText>
                 )}
             </View>
-        </SafeAreaView>
+        </ThemeSafeAreaView>
     );
 }

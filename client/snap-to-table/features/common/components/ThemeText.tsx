@@ -1,19 +1,20 @@
 ﻿import React from 'react';
 import {Text, TextProps} from 'react-native';
 import tw from '@/lib/tailwind';
+import {lightTheme, darkTheme} from "../themes";
 
-const variantClasses = {
-    title: "text-3xl font-bold tracking-tight text-zinc-900 dark:text-white",
-    heading: "text-xl font-bold text-zinc-900 dark:text-white",
-    subheading: "text-lg text-gray-600 dark:text-gray-300",
-    body: "text-base text-gray-700 dark:text-gray-300",
-    caption: "text-sm text-gray-500 dark:text-gray-400",
-    subcaption: "text-xs text-gray-500 dark:text-gray-400",
-    link: "text-base font-semibold text-blue-600 dark:text-blue-400",
-    error: "text-sm text-red-600 dark:text-red-500",
+const variantTypography = {
+    title: `text-3xl font-bold`,
+    heading: `text-xl font-bold`,
+    subheading: `text-lg `,
+    body: `text-base`,
+    caption: `text-sm`,
+    subcaption: `text-xs`,
+    link: `text-base font-bold`,
+    error: `text-sm`,
 };
 
-type TextVariant = keyof typeof variantClasses;
+type TextVariant = keyof typeof variantTypography;
 
 interface ThemeTextProps extends TextProps {
     children: React.ReactNode;
@@ -27,11 +28,19 @@ export const ThemeText = ({
                               ...rest
                           }: ThemeTextProps) => {
 
-    const classString = variantClasses[variant];
-    const baseStyle = tw.style(classString);
+    const typographyStyle = tw.style(variantTypography[variant]);
+
+    let colorStyle;
+
+    switch (variant) {
+        case "error":
+            colorStyle = tw.style(`text-[${lightTheme.error}] dark:text-[${darkTheme.error}]`);
+        default:
+            colorStyle = tw.style(`text-[${lightTheme.text}] dark:text-[${darkTheme.text}]`);
+    }
 
     return (
-        <Text style={[baseStyle, style]} {...rest}>
+        <Text style={[typographyStyle, colorStyle, style]} {...rest}>
             {children}
         </Text>
     );

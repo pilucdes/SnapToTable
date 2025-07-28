@@ -1,6 +1,7 @@
 ﻿import tw from "@/lib/tailwind";
 import {GestureResponderEvent, Pressable, PressableProps, StyleProp, ViewStyle} from "react-native";
-import {useState} from 'react';
+import {useState} from "react";
+import {colorTheme} from "../themes"
 
 interface ThemeButtonProps extends PressableProps {
     onPress?: (event: GestureResponderEvent) => void;
@@ -12,11 +13,12 @@ export const ThemeButton = ({style, onPress, children, ...rest}: ThemeButtonProp
 
     const [isHovered, setIsHovered] = useState(false);
     const baseStyle = tw.style(
-        `w-full max-w-lg shadow-sm rounded-lg p-6`,
-        `bg-white dark:bg-gray-800`,
-        isHovered && `bg-gray-100 dark:bg-gray-700`,
+        `shadow-sm p-6`,
+        `bg-[${colorTheme.secondary}]`,
+        isHovered && `opacity-90`,
         rest.disabled && `opacity-50`
     );
+    
     return (
         <Pressable
             {...rest}
