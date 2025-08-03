@@ -1,10 +1,9 @@
-import {Text, View, ActivityIndicator, SafeAreaView} from "react-native";
-import {Feather} from '@expo/vector-icons';
+import {View, ActivityIndicator} from "react-native";
 import {useCreateRecipeAnalysis} from "../features/recipes/hooks/useRecipe";
 import {useRecipeImagePicker} from "@/features/recipes/hooks/useRecipeImagePicker";
 import tw from "@/lib/tailwind"
 import {CreateRecipeAnalysisRequestDto} from "@/features/recipes/api/dto";
-import {ThemeButton, ThemeSafeAreaView, ThemeText} from "@/features/common/components";
+import {Icon, ThemeButton, ThemeSafeAreaView, ThemeText} from "@/features/common/components";
 
 export default function HomeScreen() {
 
@@ -56,10 +55,10 @@ export default function HomeScreen() {
                         <ActivityIndicator size="small" color="white"/>
                     ) : (
                         <>
-                            <Feather name="camera" size={24} style={tw`mr-3 text-white`}/>
-                            <Text style={tw`text-lg font-bold text-white`}>
+                            <Icon name="camera" size={24} style={tw`mr-3 text-white`}/>
+                            <ThemeText>
                                 Snap a recipe
-                            </Text>
+                            </ThemeText>
                         </>
                     )}
                 </ThemeButton>

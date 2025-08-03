@@ -12,9 +12,10 @@ export default function RecipesScreen() {
     return (
         <ThemeSafeAreaView>
             
-            <ScrollView contentContainerStyle={tw`items-center gap-4 p-6`}>
+            <ScrollView contentContainerStyle={tw`items-center h-full gap-8 pt-8`}>
+                
                 {isLoading ? (
-                    <ActivityIndicator size="large" style={tw`mt-20`} />
+                    <ActivityIndicator size="large" style={tw`h-full`} />
                 ) : (
                     data?.items.map((recipe) => (
                         <RecipeCard key={recipe.id} recipe={recipe} />

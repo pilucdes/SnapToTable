@@ -12,7 +12,7 @@ interface InfoPillProps {
 export const InfoPill = ({iconName, label, value}: InfoPillProps) => (
     <View style={tw`flex-col items-center gap-1`}>
         <Icon name={iconName}/>
-        <ThemeText variant="caption" style={tw`font-semibold`}>{label}</ThemeText>
-        <ThemeText variant="subcaption">{value}</ThemeText>
+        <ThemeText variant="body" style={tw`font-semibold`}>{label}</ThemeText>
+        <ThemeText variant="caption">{value}</ThemeText>
     </View>
 );

@@ -4,27 +4,34 @@ import {useState} from "react";
 import {colorTheme} from "../themes"
 
 interface ThemeButtonProps extends PressableProps {
+    variant?: ButtonVariant,
     onPress?: (event: GestureResponderEvent) => void;
     style?: StyleProp<ViewStyle>,
     children?: React.ReactNode,
 }
 
-export const ThemeButton = ({style, onPress, children, ...rest}: ThemeButtonProps) => {
+const variants = {
+    label: ``,
+    styled: `bg-[${colorTheme.primary}] shadow-sm p-6`
+};
 
-    const [isHovered, setIsHovered] = useState(false);
+type ButtonVariant = keyof typeof variants;
+
+export const ThemeButton = ({style, onPress, children,variant = "styled", ...rest}: ThemeButtonProps) => {
+
+    const buttonStyle = tw.style(variants[variant]);
+    const [isPressed, setOnPressed] = useState(false);
     const baseStyle = tw.style(
-        `shadow-sm p-6`,
-        `bg-[${colorTheme.secondary}]`,
-        isHovered && `opacity-90`,
+        isPressed && `opacity-90`,
         rest.disabled && `opacity-50`
     );
-    
+
     return (
         <Pressable
             {...rest}
-            onHoverIn={() => setIsHovered(true)}
-            onHoverOut={() => setIsHovered(false)}
-            style={[baseStyle, style]}
+            onPressIn={() => setOnPressed(true)}
+            onPressOut={() => setOnPressed(false)}
+            style={[baseStyle,buttonStyle, style]}
             onPress={onPress}>
             {children}
         </Pressable>

@@ -16,17 +16,17 @@ interface IconProps {
 
 export const Icon = ({name, size = 24, variant = "primary", style}: IconProps) => {
 
-    let baseStyle = tw`text-${colorTheme.secondary}`;
+    let baseStyle = tw`text-[${colorTheme.secondary}]`;
 
     switch (variant) {
         case "secondary":
-            baseStyle = tw`text-${colorTheme.secondary}`;
+            baseStyle = tw`text-[${colorTheme.secondary}]`;
             break;
         case "accent":
-            baseStyle = tw`text-${colorTheme.accent.opt1}`;
+            baseStyle = tw`text-[${colorTheme.accent.opt1}]`;
             break;
         default:
-            baseStyle = tw`text-${colorTheme.primary}`;
+            baseStyle = tw`text-[${colorTheme.secondary}]`;
             break;
 
     }

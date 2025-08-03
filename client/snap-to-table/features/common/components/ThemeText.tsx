@@ -5,13 +5,13 @@ import {lightTheme, darkTheme} from "../themes";
 
 const variantTypography = {
     title: `text-3xl font-bold`,
-    heading: `text-xl font-bold`,
-    subheading: `text-lg `,
-    body: `text-base`,
-    caption: `text-sm`,
+    heading: `text-xl`,
+    subheading: `text-lg`,
+    body: `text-base`,  
+    caption: `text-sm`, 
     subcaption: `text-xs`,
-    link: `text-base font-bold`,
-    error: `text-sm`,
+    link: `text-base`,   
+    error: `text-sm`
 };
 
 type TextVariant = keyof typeof variantTypography;
@@ -28,13 +28,14 @@ export const ThemeText = ({
                               ...rest
                           }: ThemeTextProps) => {
 
-    const typographyStyle = tw.style(variantTypography[variant]);
-
+    const typographyStyle = tw.style(variantTypography[variant],{fontFamily:'Poppins_400Regular'});
+    
     let colorStyle;
 
     switch (variant) {
         case "error":
             colorStyle = tw.style(`text-[${lightTheme.error}] dark:text-[${darkTheme.error}]`);
+            break;
         default:
             colorStyle = tw.style(`text-[${lightTheme.text}] dark:text-[${darkTheme.text}]`);
     }
