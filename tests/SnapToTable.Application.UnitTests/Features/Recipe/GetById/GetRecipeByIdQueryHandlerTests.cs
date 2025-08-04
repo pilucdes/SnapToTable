@@ -29,6 +29,7 @@ public class GetRecipeByIdQueryHandlerTests
             .WithId(query.Id)
             .WithCreatedAt(DateTime.UtcNow)
             .WithName("Test Recipe 1")
+            .WithUrl("http://www.test.com")
             .WithCategory("Test Category")
             .WithServings(4)
             .WithIngredients(["Ingredient A", "Ingredient B"])
@@ -46,6 +47,7 @@ public class GetRecipeByIdQueryHandlerTests
         resultDto.CreatedAt.ShouldBe(recipeEntity.CreatedAt, tolerance: TimeSpan.FromSeconds(1));
         resultDto.Name.ShouldBe("Test Recipe 1");
         resultDto.Category.ShouldBe("Test Category");
+        resultDto.Url.ShouldBe("http://www.test.com");
         resultDto.Servings.ShouldBe(4);
         resultDto.Ingredients.ShouldBe(["Ingredient A", "Ingredient B"]);
     }

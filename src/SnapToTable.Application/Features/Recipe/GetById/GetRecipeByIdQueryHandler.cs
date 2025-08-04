@@ -26,7 +26,7 @@ public class
 
         return new RecipeDto(result.Id, result.CreatedAt, result.RecipeAnalysisId,
             result.Name, result.Category,
-            result.PrepTime,
+            result.Url, result.PrepTime,
             result.CookTime, result.AdditionalTime,
             result.Servings, result.Ingredients, result.Directions, result.Notes);
     }

@@ -17,6 +17,7 @@ public class RecipeMapperTests
             Category = "Breakfast",
             Servings = "4 servings",
             PrepTime = "10 minutes",
+            Url = "https://localhost/image.webp",
             CookTime = "1 hour 20 minutes",
             AdditionalTime = "5 min",
             Ingredients = ["1 cup flour", "1 egg", "1 cup milk"],
@@ -31,6 +32,7 @@ public class RecipeMapperTests
         result.ShouldNotBeNull();
         result.Name.ShouldBe("Classic Pancakes");
         result.Category.ShouldBe("Breakfast");
+        result.Url.ShouldBe("https://localhost/image.webp");
         result.Servings.ShouldBe(4);
         result.PrepTime.ShouldBe(TimeSpan.FromMinutes(10));
         result.CookTime.ShouldBe(TimeSpan.FromMinutes(80)); // 1 hour 20 mins
@@ -57,7 +59,8 @@ public class RecipeMapperTests
         // Assert
         result.ShouldNotBeNull();
         result.Name.ShouldBe("Minimal Recipe");
-        result.Category.ShouldBe(string.Empty);
+        result.Category.ShouldBeEmpty();
+        result.Url.ShouldBeEmpty();
         result.Servings.ShouldBeNull();
         result.PrepTime.ShouldBeNull();
         result.CookTime.ShouldBeNull();

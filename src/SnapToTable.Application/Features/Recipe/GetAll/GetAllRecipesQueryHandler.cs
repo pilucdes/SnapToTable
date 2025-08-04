@@ -20,13 +20,13 @@ public class GetAllRecipesQueryHandler : IRequestHandler<GetAllRecipesQuery,
     {
         var pagedResult =
             await _repository.GetPagedAsync(request.Filter, request.RecipeAnalysisId,
-                p => new RecipeSummary(p.RecipeAnalysisId, p.Name, p.Category, p.Ingredients)
+                p => new RecipeSummary(p.RecipeAnalysisId, p.Name, p.Category, p.Url, p.Ingredients)
                     { Id = p.Id, CreatedAt = p.CreatedAt }, request.Page,
                 request.PageSize);
 
         var dtoItems = pagedResult.Items.Select(r => new RecipeSummaryDto(
             r.Id, r.CreatedAt, r.RecipeAnalysisId,
-            r.Name, r.Category, r.Ingredients)).ToList();
+            r.Name, r.Category, r.Url, r.Ingredients)).ToList();
 
         return new PagedResultDto<RecipeSummaryDto>(dtoItems, pagedResult.TotalCount, request.Page,
             request.PageSize);

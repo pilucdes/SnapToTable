@@ -28,6 +28,7 @@ public class RecipesControllerTests : BaseApiTest
                 .WithName($"Name {i}")
                 .WithCategory($"Category {i}")
                 .WithServings(i)
+                .WithUrl("http://localhost/image.webp")
                 .WithPrepTime(TimeSpan.FromMinutes(i))
                 .WithCookTime(TimeSpan.FromMinutes(2))
                 .WithAdditionalTime(TimeSpan.FromMinutes(3))
@@ -60,6 +61,7 @@ public class RecipesControllerTests : BaseApiTest
             recipe.Name.ShouldBe(expected.Name);
             recipe.Category.ShouldBe(expected.Category);
             recipe.Ingredients.ShouldBe(expected.Ingredients);
+            recipe.Url.ShouldBe(expected.Url);
         }
        
     }
@@ -86,6 +88,7 @@ public class RecipesControllerTests : BaseApiTest
             .WithRecipeAnalysisId(Guid.NewGuid())
             .WithName("Name 1")
             .WithCategory("Category 1")
+            .WithUrl("http://localhost/image.webp")
             .WithServings(4)
             .WithPrepTime(TimeSpan.FromMinutes(1))
             .WithCookTime(TimeSpan.FromMinutes(2))
@@ -108,6 +111,7 @@ public class RecipesControllerTests : BaseApiTest
         recipeDto.Id.ShouldBe(recipeToInsert.Id);
         recipeDto.Name.ShouldBe("Name 1");
         recipeDto.Category.ShouldBe("Category 1");
+        recipeDto.Url.ShouldBe("http://localhost/image.webp");
         recipeDto.Servings.ShouldBe(4);
         recipeDto.PrepTime.ShouldBe(TimeSpan.FromMinutes(1));
         recipeDto.CookTime.ShouldBe(TimeSpan.FromMinutes(2));

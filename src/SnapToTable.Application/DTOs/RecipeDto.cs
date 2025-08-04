@@ -5,6 +5,7 @@ public record RecipeDto(
     Guid RecipeAnalysisId,
     string Name,
     string Category,
+    string Url,
     TimeSpan? PrepTime,
     TimeSpan? CookTime,
     TimeSpan? AdditionalTime,
