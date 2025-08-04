@@ -4,6 +4,7 @@
     recipeAnalysisId: string;
     name: string;
     category: string;
+    url: string | null;
     prepTimeInMinutes: number | null;
     cookTimeInMinutes: number | null;
     additionalTimeInMinutes: number | null;

@@ -38,14 +38,16 @@ export default function RecipeDetailScreen() {
 
     return (
         <ThemeSafeAreaView>
-            <ScrollView>
+            <ScrollView >
 
                 <Image
-                    source={{uri: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=2960'}}
-                    style={tw`w-full h-64`}
+                    source={{
+                        uri: data?.url || require('@/assets/images/default-recipe.webp')
+                    }}
+                    style={tw`h-64`}
                 />
 
-                <View style={tw`p-6 gap-4`}>
+                <View style={tw`p-6 lg:px-100 gap-4`}>
 
 
                     <View style={tw``}>

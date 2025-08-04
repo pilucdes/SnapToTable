@@ -4,5 +4,6 @@
     recipeAnalysisId: string;
     name: string;
     category: string;
+    url: string | null;
     ingredients: readonly string[];
 }

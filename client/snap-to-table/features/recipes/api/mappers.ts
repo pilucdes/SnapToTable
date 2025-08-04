@@ -1,4 +1,4 @@
-﻿import {PagedResult, Recipe, RecipeSummary } from '../types';
+﻿import {PagedResult, Recipe, RecipeSummary} from '../types';
 import {
     PagedResultDto,
     RecipeDto,
@@ -31,6 +31,7 @@ export const mapRecipeDtoToRecipe = (dto: RecipeDto): Recipe => {
         recipeAnalysisId: dto.recipeAnalysisId,
         name: dto.name,
         category: dto.category,
+        url: dto.url,
         servings: dto.servings,
         ingredients: dto.ingredients,
         directions: dto.directions,
@@ -50,6 +51,7 @@ export const mapRecipeSummaryDtoToRecipeSummary = (dto: RecipeSummaryDto): Recip
         recipeAnalysisId: dto.recipeAnalysisId,
         name: dto.name,
         category: dto.category,
+        url:dto.url,
         ingredients: dto.ingredients,
     };
 };
