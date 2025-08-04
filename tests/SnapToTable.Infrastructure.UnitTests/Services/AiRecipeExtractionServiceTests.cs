@@ -1,7 +1,10 @@
-﻿using Betalgo.Ranul.OpenAI.Interfaces;
+﻿using System.Net;
+using Betalgo.Ranul.OpenAI.Interfaces;
 using Betalgo.Ranul.OpenAI.ObjectModels;
 using Betalgo.Ranul.OpenAI.ObjectModels.RequestModels;
 using Betalgo.Ranul.OpenAI.ObjectModels.ResponseModels;
+using Betalgo.Ranul.OpenAI.ObjectModels.ResponseModels.ImageResponseModel;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using Shouldly;
@@ -16,6 +19,7 @@ namespace SnapToTable.Infrastructure.UnitTests.Services;
 public class AiRecipeExtractionServiceTests
 {
     private readonly Mock<IOpenAIService> _openAiServiceMock;
+    private readonly Mock<ILogger<AiRecipeExtractionService>> _loggerMock;
     private readonly AiRecipeExtractionService _service;
 
     public AiRecipeExtractionServiceTests()
@@ -24,7 +28,8 @@ public class AiRecipeExtractionServiceTests
         var optionsMock = Options.Create(settings);
 
         _openAiServiceMock = new Mock<IOpenAIService>();
-        _service = new AiRecipeExtractionService(_openAiServiceMock.Object, optionsMock);
+        _loggerMock = new Mock<ILogger<AiRecipeExtractionService>>();
+        _service = new AiRecipeExtractionService(_loggerMock.Object, _openAiServiceMock.Object, optionsMock);
     }
 
     [Fact]
@@ -33,6 +38,7 @@ public class AiRecipeExtractionServiceTests
         // Arrange
         var imageInputs = new List<ImageInputDto> { AiRecipeExtractionDataFactory.CreateImageInput([1, 2, 3]) };
         var validJson = AiRecipeExtractionDataFactory.CreateValidRecipesJson();
+        const string imageUrl = "https://localhost/image123.webp";
 
         var apiResponse = new ChatCompletionCreateResponse
         {
@@ -45,10 +51,27 @@ public class AiRecipeExtractionServiceTests
             ]
         };
 
+
+        var imageResponse = new ImageCreateResponse()
+        {
+            HttpStatusCode = HttpStatusCode.OK,
+            Results =
+            [
+                new()
+                {
+                    Url = imageUrl,
+                }
+            ]
+        };
+
         _openAiServiceMock
             .Setup(c => c.ChatCompletion.CreateCompletion(It.IsAny<ChatCompletionCreateRequest>(), null,
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(apiResponse);
+
+        _openAiServiceMock
+            .Setup(c => c.Image.CreateImage(It.IsAny<ImageCreateRequest>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(imageResponse);
 
         // Act
         var result = await _service.GetRecipeFromImagesAsync(imageInputs, CancellationToken.None);
@@ -60,12 +83,13 @@ public class AiRecipeExtractionServiceTests
         var recipe = result.First();
         recipe.Name.ShouldBe("Test Cake");
         recipe.Category.ShouldBe("Dessert");
+        recipe.Url.ShouldBe(imageUrl);
         recipe.PrepTime.ShouldBe(TimeSpan.FromMinutes(10));
         recipe.CookTime.ShouldBe(TimeSpan.FromMinutes(30));
         recipe.AdditionalTime.ShouldBe(TimeSpan.FromMinutes(5));
         recipe.Servings.ShouldBe(8);
         recipe.Ingredients.ShouldBe(["Flour", "Sugar"]);
-        recipe.Directions.ShouldBe(["Mix","Bake"]);
+        recipe.Directions.ShouldBe(["Mix", "Bake"]);
         recipe.Notes.ShouldContain("Enjoy");
 
 
@@ -170,5 +194,91 @@ public class AiRecipeExtractionServiceTests
             _service.GetRecipeFromImagesAsync(imageInputs, CancellationToken.None));
 
         exception.Message.ShouldContain("resolved to null");
+    }
+
+    [Fact]
+    public async Task GetRecipeFromImagesAsync_WhenImageGenerationFailsWithError_ShouldLogAndContinue()
+    {
+        // Arrange
+        var imageInputs = new List<ImageInputDto> { AiRecipeExtractionDataFactory.CreateImageInput([1, 2, 3]) };
+        var validJson = AiRecipeExtractionDataFactory.CreateValidRecipesJson();
+        const string errorMessage = "Image generation failed due to policy violation.";
+
+        var chatApiResponse = new ChatCompletionCreateResponse
+        {
+            Choices = [new() { Message = new ChatMessage(StaticValues.ChatMessageRoles.Assistant, validJson) }]
+        };
+
+        var imageApiResponse = new ImageCreateResponse
+        {
+            Results = [],
+            Error = new Error { MessageObject = errorMessage }
+        };
+
+        _openAiServiceMock
+            .Setup(c => c.ChatCompletion.CreateCompletion(It.IsAny<ChatCompletionCreateRequest>(), null,
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(chatApiResponse);
+
+        _openAiServiceMock
+            .Setup(c => c.Image.CreateImage(It.IsAny<ImageCreateRequest>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(imageApiResponse);
+
+        // Act
+        var result = await _service.GetRecipeFromImagesAsync(imageInputs, CancellationToken.None);
+
+        // Assert
+        result.ShouldNotBeNull();
+        result.ShouldHaveSingleItem();
+        result.First().Url.ShouldBeEmpty();
+        
+        _loggerMock.Verify(
+            x => x.Log(
+                LogLevel.Error,
+                It.IsAny<EventId>(),
+                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains($"Failed to get image result. {errorMessage}")),
+                null,
+                It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+            Times.Once);
+    }
+
+    [Fact]
+    public async Task GetRecipeFromImagesAsync_WhenImageGenerationThrowsException_ShouldLogAndContinue()
+    {
+        // Arrange
+        var imageInputs = new List<ImageInputDto> { AiRecipeExtractionDataFactory.CreateImageInput([1, 2, 3]) };
+        var validJson = AiRecipeExtractionDataFactory.CreateValidRecipesJson();
+        var exception = new HttpRequestException("Network error");
+
+        var chatApiResponse = new ChatCompletionCreateResponse
+        {
+            Choices = [new() { Message = new ChatMessage(StaticValues.ChatMessageRoles.Assistant, validJson) }]
+        };
+
+        _openAiServiceMock
+            .Setup(c => c.ChatCompletion.CreateCompletion(It.IsAny<ChatCompletionCreateRequest>(), null,
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(chatApiResponse);
+
+        _openAiServiceMock
+            .Setup(c => c.Image.CreateImage(It.IsAny<ImageCreateRequest>(), It.IsAny<CancellationToken>()))
+            .ThrowsAsync(exception);
+
+        // Act
+        var result = await _service.GetRecipeFromImagesAsync(imageInputs, CancellationToken.None);
+
+        // Assert
+        result.ShouldNotBeNull();
+        result.ShouldHaveSingleItem();
+        result.First().Url.ShouldBeEmpty();
+
+        _loggerMock.Verify(
+            x => x.Log(
+                LogLevel.Error,
+                It.IsAny<EventId>(),
+                It.Is<It.IsAnyType>((v, t) => v.ToString()!.Contains("Failed to generate image for recipe: Test Cake")),
+                exception, // Assert that the exact exception instance was logged
+                It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+            Times.Once);
     }
 }

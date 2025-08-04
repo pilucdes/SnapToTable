@@ -4,6 +4,7 @@ public record Recipe(
     Guid RecipeAnalysisId,
     string Name,
     string Category,
+    string Url,
     TimeSpan? PrepTime,
     TimeSpan? CookTime,
     TimeSpan? AdditionalTime,

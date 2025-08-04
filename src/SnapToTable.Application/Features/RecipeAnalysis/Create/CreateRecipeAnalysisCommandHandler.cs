@@ -32,6 +32,7 @@ public class CreateRecipeAnalysisCommandHandler : IRequestHandler<CreateRecipeAn
                 newAnalysis.Id,
                 recipe.Name,
                 recipe.Category,
+                recipe.Url,
                 recipe.PrepTime,
                 recipe.CookTime,
                 recipe.AdditionalTime,

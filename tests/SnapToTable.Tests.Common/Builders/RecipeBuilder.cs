@@ -9,6 +9,7 @@ public class RecipeBuilder
     private DateTime _createdAt = DateTime.MinValue;
     private string _name = "Default Test Recipe";
     private string _category = "Default Category";
+    private string _url = "https://localhost/storage/img.webp";
  
     private TimeSpan? _prepTime = TimeSpan.FromMinutes(10);
     private TimeSpan? _cookTime = TimeSpan.FromMinutes(20);
@@ -27,6 +28,12 @@ public class RecipeBuilder
     public RecipeBuilder WithCreatedAt(DateTime createdAt)
     {
         _createdAt = createdAt;
+        return this;
+    }
+    
+    public RecipeBuilder WithUrl(string url)
+    {
+        _url = url;
         return this;
     }
     
@@ -96,6 +103,7 @@ public class RecipeBuilder
             _recipeAnalysisId,
             _name,
             _category,
+            _url,
             _prepTime,
             _cookTime,
             _additionalTime,

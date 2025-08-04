@@ -8,7 +8,10 @@ public static class AiRecipeExtractionDataFactory
     public static OpenAiSettings CreateOpenAiSettings() => new()
     {
         RecipeExtractionPrompt = "Test Prompt",
-        Model = "gpt-4-vision-preview",
+        RecipeImageExtractionPrompt = "Test Image Prompt",
+        Model = "gpt-4.1",
+        ImageModel = "dall-e-3",
+        ImageSize = "1024x1024",
         Token = 4096,
         ApiKey = "ABC"
     };

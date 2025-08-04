@@ -12,6 +12,7 @@ public class RawRecipeDto
     public string CookTime { get; set; } = string.Empty;
     public string AdditionalTime { get; set; } = string.Empty;
     public string Servings { get; set; } = string.Empty;
+    public string Url { get; set; } = string.Empty;
     public List<string> Ingredients { get; set; } = new();
     public List<string> Directions { get; set; } = new();
     public List<string> Notes { get; set; } = new();

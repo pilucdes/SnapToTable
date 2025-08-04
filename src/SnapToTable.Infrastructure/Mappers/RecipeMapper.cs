@@ -12,6 +12,7 @@ public static partial class RecipeMapper
         {
             Name = rawRecipe.Name,
             Category = rawRecipe.Category,
+            Url = rawRecipe.Url,
             Servings = ParseServings(rawRecipe.Servings),
             PrepTime = ParseTime(rawRecipe.PrepTime),
             CookTime = ParseTime(rawRecipe.CookTime),
