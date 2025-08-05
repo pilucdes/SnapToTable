@@ -37,6 +37,7 @@ public class RecipeRepository : BaseRepository<Recipe>, IRecipeRepository
         var totalCount = await _collection.CountDocumentsAsync(combinedFilter);
 
         var items = await _collection.Find(combinedFilter)
+            .SortByDescending(x => x.CreatedAt)
             .Skip((pageNumber - 1) * pageSize)
             .Limit(pageSize).Project(projection)
             .ToListAsync();

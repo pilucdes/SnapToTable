@@ -1,19 +1,32 @@
-﻿import {useQuery, useMutation} from '@tanstack/react-query';
+﻿import {useQuery, useMutation, useInfiniteQuery} from '@tanstack/react-query';
 import {getRecipes, getRecipeById, postRecipeAnalysis} from '../api/recipeApi';
 import {router} from 'expo-router';
-import {CreateRecipeAnalysisRequestDto, GetAllRecipesRequestDto } from '../api/dto';
+import {CreateRecipeAnalysisRequestDto, GetAllRecipesRequestDto} from '../api/dto';
 
-export const useGetAllRecipes = (params: GetAllRecipesRequestDto) => {
-    return useQuery({
-        queryKey: ['getAllRecipes', params],
-        queryFn: () => getRecipes(params)
-    })
+type UseGetAllRecipesParams = Omit<GetAllRecipesRequestDto, 'page'>;
+
+export const useGetAllRecipes = ({recipeAnalysisId, filter, pageSize}: UseGetAllRecipesParams) => {
+    return useInfiniteQuery({
+        queryKey: ['getAllRecipes', {recipeAnalysisId, filter, pageSize}],
+        queryFn: ({pageParam}) => getRecipes({
+            page: pageParam,
+            pageSize,
+            recipeAnalysisId,
+            filter
+        }),
+        getNextPageParam: (params) => {
+            if (params.hasNextPage) {
+                return params.page + 1;
+            }
+        },
+        initialPageParam: 1
+    });
 }
 export const useGetRecipeById = (id: string) => {
     return useQuery({
         queryKey: ['getRecipeById', id],
         queryFn: () => getRecipeById(id)
-    })
+    });
 }
 export const useCreateRecipeAnalysis = () => {
     return useMutation({

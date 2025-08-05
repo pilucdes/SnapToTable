@@ -5,6 +5,8 @@ import tw from "@/lib/tailwind";
 import {SectionCard} from "@/features/recipes/components/SectionCard";
 import {InfoPill} from "@/features/recipes/components/InfoPill";
 import {ThemeSafeAreaView, ThemeText} from "@/features/common/components";
+import { RecipeImage } from "@/features/recipes/components";
+import { colorTheme } from "@/features/common/themes";
 
 export default function RecipeDetailScreen() {
     const {id} = useLocalSearchParams<{ id: string }>();
@@ -40,10 +42,8 @@ export default function RecipeDetailScreen() {
         <ThemeSafeAreaView>
             <ScrollView >
 
-                <Image
-                    source={{
-                        uri: data?.url || require('@/assets/images/default-recipe.webp')
-                    }}
+                <RecipeImage
+                    url={data?.url}
                     style={tw`h-64`}
                 />
 
@@ -51,7 +51,7 @@ export default function RecipeDetailScreen() {
 
 
                     <View style={tw``}>
-                        <ThemeText variant="title" style={tw`font-bold`}>
+                        <ThemeText variant="title" color={colorTheme.accent.opt3} style={tw`font-bold`}>
                             {data?.name}
                         </ThemeText>
                         <ThemeText variant="heading" style={tw`mt-2 px-3 py-1 rounded-full self-start font-bold`}>

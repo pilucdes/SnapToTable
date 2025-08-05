@@ -1,4 +1,4 @@
-﻿type ColorValueHex = `#${string}`;
+﻿export type ColorValueHex = `#${string}`;
 
 interface ColorTheme {
     primary: ColorValueHex;
