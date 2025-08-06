@@ -1,5 +1,5 @@
 ﻿import tw from "@/lib/tailwind";
-import {GestureResponderEvent, Pressable, PressableProps, StyleProp, ViewStyle} from "react-native";
+import {ActivityIndicator, GestureResponderEvent, Pressable, PressableProps, StyleProp, ViewStyle} from "react-native";
 import {useState} from "react";
 import {colorTheme} from "../themes"
 
@@ -8,6 +8,7 @@ interface ThemeButtonProps extends PressableProps {
     onPress?: (event: GestureResponderEvent) => void;
     style?: StyleProp<ViewStyle>,
     children?: React.ReactNode,
+    isLoading?: boolean
 }
 
 const variants = {
@@ -17,7 +18,7 @@ const variants = {
 
 type ButtonVariant = keyof typeof variants;
 
-export const ThemeButton = ({style, onPress, children,variant = "styled", ...rest}: ThemeButtonProps) => {
+export const ThemeButton = ({style, onPress, children, isLoading, variant = "styled", ...rest}: ThemeButtonProps) => {
 
     const buttonStyle = tw.style(variants[variant]);
     const [isPressed, setOnPressed] = useState(false);
@@ -31,9 +32,14 @@ export const ThemeButton = ({style, onPress, children,variant = "styled", ...res
             {...rest}
             onPressIn={() => setOnPressed(true)}
             onPressOut={() => setOnPressed(false)}
-            style={[baseStyle,buttonStyle, style]}
+            style={[baseStyle, buttonStyle, style]}
             onPress={onPress}>
-            {children}
+
+            {isLoading ? (
+                <ActivityIndicator size="small" color={colorTheme.secondary} />
+            ) : (
+                children
+            )}
         </Pressable>
     );
 }

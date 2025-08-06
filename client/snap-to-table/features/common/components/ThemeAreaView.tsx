@@ -6,7 +6,7 @@ interface ThemeSafeAreaViewProps extends SafeAreaViewProps {
     children?: React.ReactNode
 }
 
-export const ThemeSafeAreaView = ({children, style, ...rest}: ThemeSafeAreaViewProps) => {
+export const ThemeAreaView = ({children, style, ...rest}: ThemeSafeAreaViewProps) => {
 
     const baseStyle = tw`flex-1 bg-[${lightTheme.background}] dark:bg-[${darkTheme.background}]`;
 

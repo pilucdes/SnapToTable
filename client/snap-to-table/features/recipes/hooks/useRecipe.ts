@@ -2,6 +2,8 @@
 import {getRecipes, getRecipeById, postRecipeAnalysis} from '../api/recipeApi';
 import {router} from 'expo-router';
 import {CreateRecipeAnalysisRequestDto, GetAllRecipesRequestDto} from '../api/dto';
+import axios from 'axios';
+import Toast from 'react-native-toast-message';
 
 type UseGetAllRecipesParams = Omit<GetAllRecipesRequestDto, 'page'>;
 
@@ -38,6 +40,16 @@ export const useCreateRecipeAnalysis = () => {
         },
         onError: (error: Error) => {
             console.error('Failed to create post:', error.message);
+
+            if (axios.isAxiosError(error) && error.response?.data.errors) {
+                
+                const allErrorArrays = Object.values(error.response?.data.errors) as string[][];
+                const firstErrorArray = allErrorArrays.find(arr => Array.isArray(arr) && arr.length > 0);
+
+                if (firstErrorArray) {
+                    Toast.show({type: 'error', text1: firstErrorArray[0]});
+                }
+            }
         }
     })
 }

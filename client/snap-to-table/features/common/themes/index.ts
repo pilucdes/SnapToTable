@@ -1,5 +1,9 @@
 ﻿export type ColorValueHex = `#${string}`;
 
+interface FontTheme {
+    family: string;
+}
+
 interface ColorTheme {
     primary: ColorValueHex;
     secondary: ColorValueHex;
@@ -25,6 +29,11 @@ export const colorTheme: ColorTheme = {
         opt3: '#2a9d8f',
     }
 };
+
+export const fontTheme: FontTheme =
+    {
+        family: 'Poppins_400Regular'
+    }
 
 export const lightTheme: Theme = {
     background: "#f5fcff",

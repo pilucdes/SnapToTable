@@ -1,7 +1,7 @@
 ﻿import React from 'react';
 import {Text, TextProps} from 'react-native';
 import tw from '@/lib/tailwind';
-import {lightTheme, darkTheme, ColorValueHex} from "../themes";
+import {lightTheme, darkTheme, ColorValueHex, fontTheme} from "../themes";
 
 const variantTypography = {
     title: `text-3xl`,
@@ -30,7 +30,7 @@ export const ThemeText = ({
                               ...rest
                           }: ThemeTextProps) => {
 
-    const typographyStyle = tw.style(variantTypography[variant], {fontFamily: 'Poppins_400Regular'});
+    const typographyStyle = tw.style(variantTypography[variant], {fontFamily: fontTheme.family});
 
     let colorStyle;
 

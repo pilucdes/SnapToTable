@@ -1,12 +1,12 @@
 ﻿import {useLocalSearchParams} from "expo-router";
 import {useGetRecipeById} from "@/features/recipes/hooks/useRecipe";
-import {SafeAreaView, ScrollView, View, Text, ActivityIndicator, Image} from "react-native";
+import {ScrollView, View} from "react-native";
 import tw from "@/lib/tailwind";
 import {SectionCard} from "@/features/recipes/components/SectionCard";
 import {InfoPill} from "@/features/recipes/components/InfoPill";
-import {ThemeSafeAreaView, ThemeText} from "@/features/common/components";
-import { RecipeImage } from "@/features/recipes/components";
-import { colorTheme } from "@/features/common/themes";
+import {ThemeAreaViewLoading, ThemeMessage, ThemeAreaView, ThemeText} from "@/features/common/components";
+import {RecipeImage} from "@/features/recipes/components";
+import {colorTheme} from "@/features/common/themes";
 
 export default function RecipeDetailScreen() {
     const {id} = useLocalSearchParams<{ id: string }>();
@@ -22,25 +22,13 @@ export default function RecipeDetailScreen() {
 
     if (isLoading) {
         return (
-            <SafeAreaView style={tw`flex-1 bg-gray-100 dark:bg-zinc-900 justify-center items-center`}>
-                <ActivityIndicator size="large" color={tw.color('blue-500')}/>
-            </SafeAreaView>
+            <ThemeAreaViewLoading/>
         );
     }
-
-    if (error) {
-        return (
-            <SafeAreaView style={tw`flex-1 bg-gray-100 dark:bg-zinc-900 justify-center items-center p-6`}>
-                <Text style={tw`text-red-500 dark:text-red-400 text-center`}>
-                    {error.message}
-                </Text>
-            </SafeAreaView>
-        )
-    }
-
+    
     return (
-        <ThemeSafeAreaView>
-            <ScrollView >
+        <ThemeAreaView>
+            <ScrollView>
 
                 <RecipeImage
                     url={data?.url}
@@ -49,8 +37,7 @@ export default function RecipeDetailScreen() {
 
                 <View style={tw`p-6 lg:px-100 gap-4`}>
 
-
-                    <View style={tw``}>
+                    <View>
                         <ThemeText variant="title" color={colorTheme.accent.opt3} style={tw`font-bold`}>
                             {data?.name}
                         </ThemeText>
@@ -58,7 +45,6 @@ export default function RecipeDetailScreen() {
                             {data?.category}
                         </ThemeText>
                     </View>
-
 
                     <View style={tw`flex-row justify-around items-center`}>
                         <InfoPill iconName="users" label="Serves" value={`${data?.servings}`}/>
@@ -103,6 +89,6 @@ export default function RecipeDetailScreen() {
 
                 <View style={tw`h-6`}/>
             </ScrollView>
-        </ThemeSafeAreaView>
+        </ThemeAreaView>
     );
 }
