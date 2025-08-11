@@ -1,9 +1,8 @@
 ﻿import {IconName} from "@/features/recipes/types"
+import { colorTheme } from "@/features/themes/constants/themeConstants";
 import tw from "@/lib/tailwind"
 import {Feather} from "@expo/vector-icons"
 import {StyleProp, TextStyle} from "react-native"
-import {colorTheme} from "../themes";
-
 type IconVariant = 'primary' | 'secondary' | 'accent';
 
 
@@ -14,7 +13,7 @@ interface IconProps {
     variant?: IconVariant
 }
 
-export const Icon = ({name, size = 24, variant = "primary", style}: IconProps) => {
+export const Icon = ({name, size = 24, variant = "secondary", style}: IconProps) => {
 
     let baseStyle = tw`text-[${colorTheme.secondary}]`;
 
@@ -26,7 +25,7 @@ export const Icon = ({name, size = 24, variant = "primary", style}: IconProps) =
             baseStyle = tw`text-[${colorTheme.accent.opt1}]`;
             break;
         default:
-            baseStyle = tw`text-[${colorTheme.secondary}]`;
+            baseStyle = tw`text-[${colorTheme.primary}]`;
             break;
 
     }

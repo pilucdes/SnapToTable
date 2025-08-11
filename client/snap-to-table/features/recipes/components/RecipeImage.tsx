@@ -1,5 +1,5 @@
 ﻿import { FALLBACK_RECIPE_IMAGE } from '@/features/common/constants/images';
-import { darkTheme, lightTheme } from '@/features/common/themes';
+import { useTheme } from '@/features/themes';
 import tw from '@/lib/tailwind';
 import React, {useRef, useState} from 'react';
 import {
@@ -24,7 +24,7 @@ interface RecipeImageProps {
 export const RecipeImage = ({url, style, resizeMode = 'cover'}: RecipeImageProps) => {
    
     const imageOpacity = useRef(new Animated.Value(0)).current;
-
+    const {theme} = useTheme();
     const [imageSource, setImageSource] = useState<ImageSourcePropType>(
         url ? {uri: url} : FALLBACK_RECIPE_IMAGE
     );
@@ -41,7 +41,7 @@ export const RecipeImage = ({url, style, resizeMode = 'cover'}: RecipeImageProps
         setImageSource(FALLBACK_RECIPE_IMAGE);
     };
     
-    const containerStyle = tw.style(`w-full bg-[${lightTheme.background}] dark:bg-[${darkTheme.background}]`);
+    const containerStyle = tw.style(`w-full bg-[${theme.background}]`);
     
     return (
         <View style={[containerStyle, style]}>

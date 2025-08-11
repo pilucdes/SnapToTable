@@ -8,7 +8,8 @@ import tw from "@/lib/tailwind";
 import {useDeviceContext} from "twrnc";
 import {useEffect} from "react";
 import Toast from "react-native-toast-message";
-import { toastConfig } from "@/lib/toastConfig";
+import {toastConfig} from "@/lib/toastConfig";
+import { ThemeProvider } from "@/features/themes";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -32,13 +33,16 @@ export default function RootLayout() {
     }
 
     return (
-        <QueryClientProvider client={queryClient}>
-            <Stack>
-                <Stack.Screen name="index" options={{headerShown: false}}/>
-                <Stack.Screen name="recipes/[id]" options={{headerShown: false}}/>
-                <Stack.Screen name="recipes/index" options={{headerShown: false}}/>
-            </Stack>
-            <Toast config={toastConfig} />
-        </QueryClientProvider>
+        <ThemeProvider>
+            <QueryClientProvider client={queryClient}>
+                <Stack>
+                    <Stack.Screen name="index" options={{headerShown: false}}/>
+                    <Stack.Screen name="recipes/[id]" options={{headerShown: false}}/>
+                    <Stack.Screen name="recipes/index" options={{headerShown: false}}/>
+                </Stack>
+                <Toast config={toastConfig}/>
+            </QueryClientProvider>
+        </ThemeProvider>
+
     );
 }

@@ -3,19 +3,20 @@ import {useGetAllRecipes} from "@/features/recipes/hooks/useRecipe";
 import {useLocalSearchParams} from "expo-router";
 import {ActivityIndicator, FlatList} from "react-native";
 import tw from "@/lib/tailwind";
-import {ThemeAreaViewLoading, ThemeMessage, ThemeAreaView} from "@/features/common/components";
+import {ThemeAreaViewLoading, ThemeMessage, ThemeAreaView, AnimationEaseIn} from "@/features/common/components";
 import {useCallback, useState} from "react";
 import {RecipeSummary} from "@/features/recipes/types";
 import {useDebounce} from "@/features/common/hooks/useDebounce";
-import {ThemeTextInput} from "@/features/common/components/ThemeTextInput";
+import {ThemeTextInput} from "@/features/common/components";
 
 const RECIPE_PAGE_SIZE = 5;
+const RECIPE_SEARCH_DELAY = 300;
 export default function RecipesScreen() {
 
+    const [searchFilter, setSearchFilter] = useState("");
     const {recipeAnalysisId} = useLocalSearchParams<{ recipeAnalysisId: string }>();
     const allowSearchFilter = !recipeAnalysisId;
-    const [searchFilter, setSearchFilter] = useState("");
-    const debounceText = useDebounce(searchFilter, 300);
+    const debounceText = useDebounce(searchFilter, RECIPE_SEARCH_DELAY);
 
     const {
         data,
@@ -50,8 +51,10 @@ export default function RecipesScreen() {
         }
     }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-    const renderItem = useCallback(({item}: { item: RecipeSummary }) => (
-        <RecipeCard recipe={item}/>
+    const renderItem = useCallback(({item, index}: { item: RecipeSummary, index: number }) => (
+        <AnimationEaseIn delay={Math.min(index * 50, 300)}>
+            <RecipeCard recipe={item}/>
+        </AnimationEaseIn>
     ), []);
 
     if (isLoading) {
@@ -78,7 +81,7 @@ export default function RecipesScreen() {
                 key={debounceText}
                 data={recipes}
                 renderItem={renderItem}
-                keyExtractor={(item) => item.id}
+                keyExtractor={(item, index) => item.id}
                 contentContainerStyle={listContainerStyles}
                 onEndReached={handleLoadMore}
                 onEndReachedThreshold={0.5}

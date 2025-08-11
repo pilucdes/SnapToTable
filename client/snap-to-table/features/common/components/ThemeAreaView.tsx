@@ -1,5 +1,5 @@
-﻿import tw from "@/lib/tailwind"
-import {darkTheme, lightTheme} from "../themes"
+﻿import {useTheme} from "@/features/themes";
+import tw from "@/lib/tailwind"
 import {SafeAreaView, SafeAreaViewProps} from "react-native-safe-area-context";
 
 interface ThemeSafeAreaViewProps extends SafeAreaViewProps {
@@ -8,7 +8,8 @@ interface ThemeSafeAreaViewProps extends SafeAreaViewProps {
 
 export const ThemeAreaView = ({children, style, ...rest}: ThemeSafeAreaViewProps) => {
 
-    const baseStyle = tw`flex-1 bg-[${lightTheme.background}] dark:bg-[${darkTheme.background}]`;
+    const {theme} = useTheme();
+    const baseStyle = tw`flex-1 bg-[${theme.background}]`;
 
     return (
         <SafeAreaView style={[baseStyle, style]} {...rest}>

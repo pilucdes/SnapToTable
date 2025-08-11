@@ -1,7 +1,8 @@
 ﻿import React from 'react';
 import {Text, TextProps} from 'react-native';
 import tw from '@/lib/tailwind';
-import {lightTheme, darkTheme, ColorValueHex, fontTheme} from "../themes";
+import { useTheme } from '@/features/themes';
+import { ColorValueHex } from '@/features/themes/types';
 
 const variantTypography = {
     title: `text-3xl`,
@@ -30,16 +31,17 @@ export const ThemeText = ({
                               ...rest
                           }: ThemeTextProps) => {
 
-    const typographyStyle = tw.style(variantTypography[variant], {fontFamily: fontTheme.family});
-
+    const {theme} = useTheme();
+    const typographyStyle = tw.style(variantTypography[variant], {fontFamily: theme.font.family});
+    
     let colorStyle;
 
     switch (variant) {
         case "error":
-            colorStyle = tw.style(`text-[${lightTheme.error}] dark:text-[${darkTheme.error}]`);
+            colorStyle = tw.style(`text-[${theme.error}]`);
             break;
         default:
-            colorStyle = color ? tw.style(`text-[${color}]`) : tw.style(`text-[${lightTheme.text}] dark:text-[${darkTheme.text}]`);
+            colorStyle = color ? tw.style(`text-[${color}]`) : tw.style(`text-[${theme.text}]`);
     }
 
     return (

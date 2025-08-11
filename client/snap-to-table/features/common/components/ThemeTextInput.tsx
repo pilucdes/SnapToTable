@@ -1,7 +1,7 @@
 ﻿import tw from "@/lib/tailwind";
 import {StyleProp, TextInput, TextStyle} from "react-native"
-import {darkTheme, fontTheme, lightTheme} from "../themes";
 import {applyOpacityToHex} from "@/utils/colors";
+import {useTheme} from "@/features/themes";
 
 interface ThemeTextInputProps {
     value: string,
@@ -12,7 +12,8 @@ interface ThemeTextInputProps {
 
 export const ThemeTextInput = ({value, onChangeText, placeholder, style}: ThemeTextInputProps) => {
 
-    const baseStyle = tw.style(`text-lg p-2 w-full rounded-lg border-2 border-[${darkTheme.primary}] bg-[${applyOpacityToHex(darkTheme.primary, 0.5)}] text-[${lightTheme.text}] dark:text-[${darkTheme.text}]`, {fontFamily: fontTheme.family});
+    const {theme} = useTheme();
+    const baseStyle = tw.style(`text-lg p-2 w-full rounded-lg border-2 border-[${theme.primary}] bg-[${applyOpacityToHex(theme.primary, 0.6)}] text-[${theme.text}]`, {fontFamily: theme.font.family});
 
     return (
         <TextInput

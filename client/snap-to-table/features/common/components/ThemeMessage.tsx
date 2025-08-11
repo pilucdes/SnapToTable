@@ -1,5 +1,6 @@
 ﻿import tw from "@/lib/tailwind";
-import {ThemeAreaView, ThemeText} from ".";
+import { ThemeAreaView } from "./ThemeAreaView";
+import { ThemeText } from "./ThemeText";
 
 interface ThemeMessageProps {
     isLoading?: boolean | null;

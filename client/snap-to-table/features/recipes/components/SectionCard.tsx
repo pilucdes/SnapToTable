@@ -1,5 +1,4 @@
 ﻿import {ThemeText} from "@/features/common/components/ThemeText";
-import {colorTheme} from "@/features/common/themes";
 import tw from "@/lib/tailwind";
 import {StyleProp, View, ViewStyle} from "react-native";
 

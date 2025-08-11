@@ -1,7 +1,8 @@
 ﻿import tw from "@/lib/tailwind";
 import {ActivityIndicator, GestureResponderEvent, Pressable, PressableProps, StyleProp, ViewStyle} from "react-native";
 import {useState} from "react";
-import {colorTheme} from "../themes"
+import {colorTheme} from "@/features/themes/constants/themeConstants";
+import { applyOpacityToHex } from "@/utils/colors";
 
 interface ThemeButtonProps extends PressableProps {
     variant?: ButtonVariant,
@@ -11,14 +12,18 @@ interface ThemeButtonProps extends PressableProps {
     isLoading?: boolean
 }
 
+const commonStyle = `flex-row items-center justify-center px-8 py-4 rounded-xl`;
 const variants = {
-    label: ``,
-    styled: `bg-[${colorTheme.primary}] shadow-sm p-6`
+    none: ``,
+    label: commonStyle,
+    primary: `bg-[${colorTheme.primary}] shadow-lg ${commonStyle}`,
+    subtilePrimary: `bg-[${applyOpacityToHex(colorTheme.primary,0.5)}] shadow-lg ${commonStyle}`
+
 };
 
 type ButtonVariant = keyof typeof variants;
 
-export const ThemeButton = ({style, onPress, children, isLoading, variant = "styled", ...rest}: ThemeButtonProps) => {
+export const ThemeButton = ({style, onPress, children, isLoading, variant = "primary", ...rest}: ThemeButtonProps) => {
 
     const buttonStyle = tw.style(variants[variant]);
     const [isPressed, setOnPressed] = useState(false);
@@ -36,7 +41,7 @@ export const ThemeButton = ({style, onPress, children, isLoading, variant = "sty
             onPress={onPress}>
 
             {isLoading ? (
-                <ActivityIndicator size="small" color={colorTheme.secondary} />
+                <ActivityIndicator size="small" color={colorTheme.secondary}/>
             ) : (
                 children
             )}

@@ -1,6 +1,7 @@
 ﻿import tw from "@/lib/tailwind";
-import {ThemeAreaView} from ".";
+
 import { ActivityIndicator } from "react-native";
+import { ThemeAreaView } from "./ThemeAreaView";
 
 export const ThemeAreaViewLoading = () => {
 
