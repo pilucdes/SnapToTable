@@ -9,7 +9,7 @@ import {useDeviceContext} from "twrnc";
 import {useEffect} from "react";
 import Toast from "react-native-toast-message";
 import {toastConfig} from "@/lib/toastConfig";
-import { ThemeProvider } from "@/themes";
+import {ThemeProvider} from "@/themes";
 
 SplashScreen.preventAutoHideAsync();
 

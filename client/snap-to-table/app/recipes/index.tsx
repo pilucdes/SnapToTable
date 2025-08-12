@@ -13,8 +13,8 @@ const RECIPE_PAGE_SIZE = 5;
 const RECIPE_SEARCH_DELAY = 300;
 export default function RecipesScreen() {
 
-    const [searchFilter, setSearchFilter] = useState("");
     const {recipeAnalysisId} = useLocalSearchParams<{ recipeAnalysisId: string }>();
+    const [searchFilter, setSearchFilter] = useState("");
     const allowSearchFilter = !recipeAnalysisId;
     const debounceText = useDebounce(searchFilter, RECIPE_SEARCH_DELAY);
 
@@ -81,7 +81,7 @@ export default function RecipesScreen() {
                 key={debounceText}
                 data={recipes}
                 renderItem={renderItem}
-                keyExtractor={(item, index) => item.id}
+                keyExtractor={(item) => item.id}
                 contentContainerStyle={listContainerStyles}
                 onEndReached={handleLoadMore}
                 onEndReachedThreshold={0.5}

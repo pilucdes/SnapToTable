@@ -12,11 +12,9 @@ export default function RecipeDetailScreen() {
     const {id} = useLocalSearchParams<{ id: string }>();
     const {data, isLoading} = useGetRecipeById(id);
     const getDisplayMinutes = (dataMinutes: number | null | undefined) => {
-
         if (!dataMinutes) {
             return "";
         }
-
         return `${dataMinutes} min`;
     }
 
