@@ -492,3 +492,6 @@ node_modules
 .expo
 .vscode
 dist
+
+# Prevent .gitignore files in client from being recreated (expo cli)
+client/snap-to-table/.gitignore
