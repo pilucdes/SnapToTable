@@ -1,16 +1,16 @@
-﻿import {AxiosError} from "axios";
-import {ApiException} from "../types/apiException";
+import {AxiosError} from "axios";
 import Toast from "react-native-toast-message";
+import { ApiError } from "../types";
 
-export const isApiException = (
+export const isApiError = (
     error: AxiosError
-): error is AxiosError<ApiException> => {
+): error is AxiosError<ApiError> => {
     return error instanceof AxiosError;
 };
 
-export const handleValidationException = (err: AxiosError): void => {
+export const handleValidationError = (err: AxiosError): void => {
 
-    if (!isApiException(err) || !err.response || err.response?.status !== 400) {
+    if (!isApiError(err) || !err.response || err.response?.status !== 400) {
         return;
     }
 

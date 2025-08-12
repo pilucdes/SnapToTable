@@ -1,4 +1,5 @@
-﻿import axios from 'axios';
+﻿import { handleNetworkError } from '@/errors';
+import axios from 'axios';
 
 const apiClient = axios.create({
     baseURL: process.env.EXPO_PUBLIC_API_BASE_URL,
@@ -22,6 +23,8 @@ apiClient.interceptors.response.use(
         console.log('Response Headers:', error.response?.headers);
         console.groupEnd();
 
+        handleNetworkError(error);
+        
         return Promise.reject(error);
     }
 );

@@ -1,6 +1,6 @@
 ﻿import {useQuery, useMutation, useInfiniteQuery} from '@tanstack/react-query';
 import {getRecipes, getRecipeById, postRecipeAnalysis} from '../api/recipeApi';
-import { handleValidationException } from '@/exceptions';
+import { handleValidationError } from '@/errors';
 import {CreateRecipeAnalysisRequestDto, GetAllRecipesRequestDto} from '../api/dto';
 import {router} from 'expo-router';
 import axios from 'axios';
@@ -40,7 +40,7 @@ export const useCreateRecipeAnalysis = () => {
         },
         onError: (error: Error) => {
             if (axios.isAxiosError(error)) {
-                handleValidationException(error);
+                handleValidationError(error);
             }
         }
     })

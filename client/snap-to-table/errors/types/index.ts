@@ -1,6 +1,6 @@
-﻿export interface ApiException {
+﻿export interface ApiError {
     type: string;
-    title: string; 
+    title: string;
     status: number;
     exceptionType: string;
     traceId?: string;
