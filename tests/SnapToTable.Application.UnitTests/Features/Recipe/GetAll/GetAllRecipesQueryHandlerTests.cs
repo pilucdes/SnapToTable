@@ -53,9 +53,9 @@ public class GetAllRecipesQueryHandlerTests
 
         var recipeEntities = new List<RecipeSummary>
         {
-            new(tomatoSoup.RecipeAnalysisId, tomatoSoup.Name, tomatoSoup.Category,
+            new(tomatoSoup.RecipeAnalysisId, tomatoSoup.Name, tomatoSoup.Category, tomatoSoup.Url,
                 tomatoSoup.Ingredients),
-            new(chickenSoup.RecipeAnalysisId, chickenSoup.Name, chickenSoup.Category,
+            new(chickenSoup.RecipeAnalysisId, chickenSoup.Name, chickenSoup.Category, chickenSoup.Url,
                 chickenSoup.Ingredients)
         };
 
@@ -102,15 +102,17 @@ public class GetAllRecipesQueryHandlerTests
         var query = new GetAllRecipesQuery(Page: 1, PageSize: 10, Filter: "Soup", RecipeAnalysisId: null);
 
         _repositoryMock
-            .Setup(repo => repo.GetPagedAsync(query.Filter, query.RecipeAnalysisId, p => p, query.Page, query.PageSize))
-            .ReturnsAsync(new PagedResult<Domain.Entities.Recipe>(new List<Domain.Entities.Recipe>(), 1, 1, 20));
+            .Setup(repo => repo.GetPagedAsync(query.Filter, query.RecipeAnalysisId,
+                It.IsAny<Expression<Func<Domain.Entities.Recipe, RecipeSummary>>>(), query.Page, query.PageSize))
+            .ReturnsAsync(new PagedResult<RecipeSummary>(new List<RecipeSummary>(), 1, 1, 20));
 
         // Act
         await _handler.Handle(query, CancellationToken.None);
 
         // Assert
         _repositoryMock.Verify(
-            repo => repo.GetPagedAsync(query.Filter, query.RecipeAnalysisId, p => p, query.Page, query.PageSize),
+            repo => repo.GetPagedAsync(query.Filter, query.RecipeAnalysisId,
+                It.IsAny<Expression<Func<Domain.Entities.Recipe, RecipeSummary>>>(), query.Page, query.PageSize),
             Times.Once);
     }
 }

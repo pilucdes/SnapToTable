@@ -6,17 +6,22 @@ import {
 } from './dto';
 
 const parseDurationToMinutes = (duration: string | null): number | null => {
+
     if (!duration) return null;
-    const matches = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?/);
+
+    const matches = duration.match(/(\d{2}):(\d{2}):(\d{2})/);
+
     if (!matches) return null;
+    
     const hours = parseInt(matches[1] || '0', 10);
     const minutes = parseInt(matches[2] || '0', 10);
+
     return hours * 60 + minutes;
 };
 
 const getTotalTimeInMinutes = (prepTimeInMinutes: number | null, cookTimeInMinutes: number | null, additionalTimeInMinutes: number | null) => {
     return [prepTimeInMinutes, cookTimeInMinutes, additionalTimeInMinutes]
-        .reduce((sum, time) => sum || 0 + (time || 0), 0);
+        .reduce((sum, time) => (sum || 0) + (time || 0), 0);
 }
 export const mapRecipeDtoToRecipe = (dto: RecipeDto): Recipe => {
 
@@ -24,7 +29,8 @@ export const mapRecipeDtoToRecipe = (dto: RecipeDto): Recipe => {
     const cookTimeInMinutes = parseDurationToMinutes(dto.cookTime);
     const additionalTimeInMinutes = parseDurationToMinutes(dto.additionalTime);
     const totalTimeInMinutes = getTotalTimeInMinutes(prepTimeInMinutes, cookTimeInMinutes, additionalTimeInMinutes);
-
+    
+    console.log(prepTimeInMinutes,cookTimeInMinutes,additionalTimeInMinutes, totalTimeInMinutes);
     return {
         id: dto.id,
         createdAt: new Date(dto.createdAt),
@@ -51,7 +57,7 @@ export const mapRecipeSummaryDtoToRecipeSummary = (dto: RecipeSummaryDto): Recip
         recipeAnalysisId: dto.recipeAnalysisId,
         name: dto.name,
         category: dto.category,
-        url:dto.url,
+        url: dto.url,
         ingredients: dto.ingredients,
     };
 };

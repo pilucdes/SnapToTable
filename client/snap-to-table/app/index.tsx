@@ -1,7 +1,8 @@
 import {View} from "react-native";
+import tw from "@/lib/tailwind"
+import {recipeCreationTitles, recipeCreationIcons} from "@/features/recipes/constants/animationConstants";
 import {useCreateRecipeAnalysis} from "../features/recipes/hooks/useRecipe";
 import {useRecipeImagePicker} from "@/features/recipes/hooks/useRecipeImagePicker";
-import tw from "@/lib/tailwind"
 import {CreateRecipeAnalysisRequestDto} from "@/features/recipes/api/dto";
 import {
     Icon,
@@ -9,9 +10,11 @@ import {
     ThemeAreaView,
     ThemeText,
     ThemeSwitcher,
-    AnimationEaseIn
+    AnimationEaseIn,
+    AnimationTextChange
 } from "@/features/common/components";
 import {router} from "expo-router";
+
 
 export default function HomeScreen() {
 
@@ -48,14 +51,25 @@ export default function HomeScreen() {
 
     return (
         <ThemeAreaView>
+
             <View style={tw`items-end`}>
                 <ThemeSwitcher/>
             </View>
+
             <View style={tw`flex-1 items-center justify-center p-8`}>
                 <AnimationEaseIn delay={100}>
-                    <ThemeText variant="title" style={tw`text-4xl font-semibold text-center mb-10`}>
-                        {isPending ? "Creating new recipes..." : "Any new recipe needed for today ?"}
-                    </ThemeText>
+                    <View style={tw`mb-8 gap-3`}>
+                        {isPending ?
+                            <>
+                                <AnimationTextChange style={tw`text-4xl font-semibold text-center`}
+                                                     content={recipeCreationTitles}/>
+                                <AnimationTextChange style={tw`text-5xl font-semibold text-center`}
+                                                     content={recipeCreationIcons} shuffleContent={true}/>
+                            </> :
+                            <ThemeText variant="title" style={tw`text-4xl font-semibold text-center`}>
+                                Any new recipe needed for today ?
+                            </ThemeText>}
+                    </View>
                 </AnimationEaseIn>
 
 
@@ -64,8 +78,7 @@ export default function HomeScreen() {
                         disabled={isPending}
                         onPress={handleSnapPress}
                         isLoading={isPending}
-                        style={tw`w-80`}
-                    >
+                        style={tw`w-80`}>
 
                         <Icon name="camera" size={24} style={tw`mr-3`}/>
                         <ThemeText style={tw`text-white`}>
@@ -78,8 +91,7 @@ export default function HomeScreen() {
                     <ThemeButton
                         variant="subtilePrimary"
                         onPress={previousRecipesPress}
-                        style={tw`mt-5 w-80`}
-                    >
+                        style={tw`mt-5 w-80`}>
 
                         <Icon variant="primary" name="eye" size={24} style={tw`mr-3`}/>
                         <ThemeText style={tw`text-white`}>

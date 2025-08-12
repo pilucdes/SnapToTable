@@ -24,7 +24,6 @@ public class BaseRepository<T> : IRepository<T> where T : BaseEntity
 
     public virtual async Task AddAsync(T entity)
     {
-        entity.CreatedAt = DateTime.UtcNow;
         await _collection.InsertOneAsync(entity);
     }
 
@@ -33,11 +32,6 @@ public class BaseRepository<T> : IRepository<T> where T : BaseEntity
         if (!entities.Any())
             return;
         
-        foreach (var entity in entities)
-        {
-            entity.CreatedAt = DateTime.UtcNow;
-        }
-
         await _collection.InsertManyAsync(entities);
     }
 

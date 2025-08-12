@@ -10,7 +10,7 @@ import {colorTheme} from "@/features/themes/constants/themeConstants";
 
 export default function RecipeDetailScreen() {
     const {id} = useLocalSearchParams<{ id: string }>();
-    const {data, isLoading, error} = useGetRecipeById(id);
+    const {data, isLoading} = useGetRecipeById(id);
     const getDisplayMinutes = (dataMinutes: number | null | undefined) => {
 
         if (!dataMinutes) {

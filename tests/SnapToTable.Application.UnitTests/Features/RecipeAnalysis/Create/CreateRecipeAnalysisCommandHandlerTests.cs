@@ -3,6 +3,7 @@ using Shouldly;
 using SnapToTable.Application.Contracts;
 using SnapToTable.Application.DTOs;
 using SnapToTable.Application.Features.RecipeAnalysis.Create;
+using SnapToTable.Domain.Entities;
 using SnapToTable.Domain.Repositories;
 using Xunit;
 
@@ -42,11 +43,12 @@ public class CreateRecipeAnalysisCommandHandlerTests
         // Assert
         _aiServiceMock.Verify(s => s.GetRecipeFromImagesAsync(command.Images, It.IsAny<CancellationToken>()),
             Times.Once);
-        
+
         _repositoryRecipeAnalysisMock.Verify(r => r.AddAsync(It.IsAny<Domain.Entities.RecipeAnalysis>()), Times.Once);
-        _repositoryRecipeMock.Verify(r => r.AddRangeAsync(It.IsAny<IReadOnlyList<Domain.Entities.Recipe>>()), Times.Once);
+        _repositoryRecipeMock.Verify(r => r.AddRangeAsync(It.IsAny<IReadOnlyList<Domain.Entities.Recipe>>()),
+            Times.Once);
     }
-    
+
     [Fact]
     public async Task Handle_WithValidCommand_ShouldCorrectlyMapAiResultToEntity()
     {
@@ -74,7 +76,7 @@ public class CreateRecipeAnalysisCommandHandlerTests
         // Assert
         capturedRecipeAnalysis.ShouldNotBeNull();
         capturedRecipes.ShouldNotBeNull();
-        
+
         var capturedRecipe = capturedRecipes.First();
         var sourceRecipe = aiResult.First();
 
@@ -86,7 +88,6 @@ public class CreateRecipeAnalysisCommandHandlerTests
     {
         // Arrange
         var command = RecipeAnalysisDataFactory.CreateValidCommand();
-
         var expectedGuid = Guid.NewGuid();
 
         _aiServiceMock.Setup(s =>
@@ -94,7 +95,11 @@ public class CreateRecipeAnalysisCommandHandlerTests
             .ReturnsAsync([]);
 
         _repositoryRecipeAnalysisMock.Setup(r => r.AddAsync(It.IsAny<Domain.Entities.RecipeAnalysis>()))
-            .Callback<Domain.Entities.RecipeAnalysis>(entity => { entity.Id = expectedGuid; });
+            .Callback<Domain.Entities.RecipeAnalysis>(entity =>
+            {
+                var property = entity.GetType().GetProperty(nameof(BaseEntity.Id));
+                property?.SetValue(entity, expectedGuid);
+            });
 
         // Act
         var resultId = await _handler.Handle(command, CancellationToken.None);
