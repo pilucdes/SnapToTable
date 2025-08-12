@@ -6,7 +6,7 @@ import {SectionCard} from "@/features/recipes/components/SectionCard";
 import {InfoPill} from "@/features/recipes/components/InfoPill";
 import {ThemeAreaViewLoading, ThemeAreaView, ThemeText, AnimationEaseIn} from "@/features/common/components";
 import {RecipeImage} from "@/features/recipes/components";
-import {colorTheme} from "@/features/themes/constants/themeConstants";
+import {colorTheme} from "@/themes/constants/themeConstants";
 
 export default function RecipeDetailScreen() {
     const {id} = useLocalSearchParams<{ id: string }>();

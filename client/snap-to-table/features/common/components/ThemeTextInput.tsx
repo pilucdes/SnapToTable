@@ -1,7 +1,7 @@
 ﻿import tw from "@/lib/tailwind";
 import {StyleProp, TextInput, TextStyle} from "react-native"
 import {applyOpacityToHex} from "@/utils/colors";
-import {useTheme} from "@/features/themes";
+import {useTheme} from "@/themes";
 
 interface ThemeTextInputProps {
     value: string,

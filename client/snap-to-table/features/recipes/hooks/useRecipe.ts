@@ -1,9 +1,9 @@
 ﻿import {useQuery, useMutation, useInfiniteQuery} from '@tanstack/react-query';
 import {getRecipes, getRecipeById, postRecipeAnalysis} from '../api/recipeApi';
-import {router} from 'expo-router';
+import { handleValidationException } from '@/exceptions';
 import {CreateRecipeAnalysisRequestDto, GetAllRecipesRequestDto} from '../api/dto';
+import {router} from 'expo-router';
 import axios from 'axios';
-import {handleValidationException} from '@/features/exceptions/utils/apiExceptionUtils';
 
 type UseGetAllRecipesParams = Omit<GetAllRecipesRequestDto, 'page'>;
 

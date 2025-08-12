@@ -1,8 +1,8 @@
 ﻿import React from 'react';
 import {Text, TextProps} from 'react-native';
 import tw from '@/lib/tailwind';
-import { useTheme } from '@/features/themes';
-import { ColorValueHex } from '@/features/themes/types';
+import { useTheme } from '@/themes';
+import { ColorValueHex } from '@/themes/types';
 
 const variantTypography = {
     title: `text-3xl`,

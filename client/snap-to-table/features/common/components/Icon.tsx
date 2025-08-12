@@ -1,5 +1,5 @@
 ﻿import {IconName} from "@/features/recipes/types"
-import { colorTheme } from "@/features/themes/constants/themeConstants";
+import { colorTheme } from "@/themes/constants/themeConstants";
 import tw from "@/lib/tailwind"
 import {Feather} from "@expo/vector-icons"
 import {StyleProp, TextStyle} from "react-native"

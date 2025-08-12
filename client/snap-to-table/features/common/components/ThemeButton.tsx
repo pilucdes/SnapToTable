@@ -1,7 +1,7 @@
 ﻿import tw from "@/lib/tailwind";
 import {ActivityIndicator, GestureResponderEvent, Pressable, PressableProps, StyleProp, ViewStyle} from "react-native";
 import {useState} from "react";
-import {colorTheme} from "@/features/themes/constants/themeConstants";
+import {colorTheme} from "@/themes/constants/themeConstants";
 import { applyOpacityToHex } from "@/utils/colors";
 
 interface ThemeButtonProps extends PressableProps {

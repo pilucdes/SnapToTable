@@ -1,5 +1,5 @@
 ﻿import tw from "@/lib/tailwind";
-import {useTheme} from "@/features/themes";
+import {useTheme} from "@/themes";
 import { ThemeButton } from "./ThemeButton";
 import { Icon } from "./Icon";
 import { ThemeText } from "./ThemeText";

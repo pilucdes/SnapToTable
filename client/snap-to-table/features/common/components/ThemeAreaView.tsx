@@ -1,4 +1,4 @@
-﻿import {useTheme} from "@/features/themes";
+﻿import {useTheme} from "@/themes";
 import tw from "@/lib/tailwind"
 import {SafeAreaView, SafeAreaViewProps} from "react-native-safe-area-context";
 

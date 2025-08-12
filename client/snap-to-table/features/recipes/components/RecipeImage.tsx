@@ -1,5 +1,5 @@
 ﻿import { FALLBACK_RECIPE_IMAGE } from '@/features/common/constants/images';
-import { useTheme } from '@/features/themes';
+import { useTheme } from '@/themes';
 import tw from '@/lib/tailwind';
 import React, {useRef, useState} from 'react';
 import {

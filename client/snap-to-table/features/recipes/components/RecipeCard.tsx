@@ -5,7 +5,7 @@ import {router} from 'expo-router';
 import {ThemeButton, ThemeText} from '@/features/common/components';
 import {LinearGradient} from 'expo-linear-gradient';
 import {applyOpacityToHex} from '@/utils/colors';
-import {colorTheme} from '@/features/themes/constants/themeConstants';
+import {colorTheme} from '@/themes/constants/themeConstants';
 import {RecipeImage} from './RecipeImage';
 
 interface RecipeCardProps {
