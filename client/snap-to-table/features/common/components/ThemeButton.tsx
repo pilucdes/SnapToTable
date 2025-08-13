@@ -16,8 +16,8 @@ const commonStyle = `flex-row items-center justify-center px-8 py-4 rounded-xl`;
 const variants = {
     none: ``,
     label: commonStyle,
-    primary: `bg-[${colorTheme.primary}] shadow-lg ${commonStyle}`,
-    subtilePrimary: `bg-[${applyOpacityToHex(colorTheme.primary,0.5)}] shadow-lg ${commonStyle}`
+    primary: `bg-[${colorTheme.primary}] ${commonStyle}`,
+    subtilePrimary: `bg-[${applyOpacityToHex(colorTheme.primary,0.6)}]  ${commonStyle}`
 };
 
 type ButtonVariant = keyof typeof variants;
@@ -42,7 +42,7 @@ export const ThemeButton = ({style, onPress, children, isLoading, variant = "pri
             {isLoading ? (
                 <ActivityIndicator size="small" color={colorTheme.secondary}/>
             ) : (
-                children
+                    children
             )}
         </Pressable>
     );

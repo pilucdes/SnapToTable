@@ -26,6 +26,7 @@ export default function RecipesScreen() {
         hasNextPage,
         fetchNextPage,
         refetch,
+        isLoading,
         isRefetching
     } = useGetAllRecipes({
         recipeAnalysisId,
@@ -56,6 +57,10 @@ export default function RecipesScreen() {
             <RecipeCard recipe={item}/>
         </AnimationEaseIn>
     ), []);
+
+    if (isLoading) {
+        return (<ThemeAreaViewLoading/>)
+    }
 
     return (
         <ThemeAreaView style={tw`flex items-center justify-center`}>

@@ -30,7 +30,6 @@ export const mapRecipeDtoToRecipe = (dto: RecipeDto): Recipe => {
     const additionalTimeInMinutes = parseDurationToMinutes(dto.additionalTime);
     const totalTimeInMinutes = getTotalTimeInMinutes(prepTimeInMinutes, cookTimeInMinutes, additionalTimeInMinutes);
     
-    console.log(prepTimeInMinutes,cookTimeInMinutes,additionalTimeInMinutes, totalTimeInMinutes);
     return {
         id: dto.id,
         createdAt: new Date(dto.createdAt),

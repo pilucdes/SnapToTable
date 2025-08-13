@@ -32,8 +32,8 @@ public class AiRecipeExtractionService : IAiRecipeExtractionService
         IEnumerable<ImageInputDto> images,
         CancellationToken cancellationToken)
     {
-        var request = await BuildChatCompletionCreateRequestAsync(images, cancellationToken);
-        var contentJson = await FetchCompletionContentAsync(request, cancellationToken);
+        var request = await BuildChatRequestAsync(images, cancellationToken);
+        var contentJson = await FetchContentAsync(request, cancellationToken);
         var rawRecipes = ParseRawRecipes(contentJson);
 
         await AugmentRecipesWithImageUrl(rawRecipes, cancellationToken);
@@ -75,7 +75,7 @@ public class AiRecipeExtractionService : IAiRecipeExtractionService
         await Task.WhenAll(tasks);
     }
 
-    private async Task<ChatCompletionCreateRequest> BuildChatCompletionCreateRequestAsync(
+    private async Task<ChatCompletionCreateRequest> BuildChatRequestAsync(
         IEnumerable<ImageInputDto> images,
         CancellationToken cancellationToken)
     {
@@ -96,7 +96,7 @@ public class AiRecipeExtractionService : IAiRecipeExtractionService
         };
     }
 
-    private async Task<string> FetchCompletionContentAsync(ChatCompletionCreateRequest request,
+    private async Task<string> FetchContentAsync(ChatCompletionCreateRequest request,
         CancellationToken cancellationToken)
     {
         var completion = await _client.ChatCompletion.CreateCompletion(request, cancellationToken: cancellationToken);

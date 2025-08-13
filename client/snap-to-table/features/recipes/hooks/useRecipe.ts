@@ -1,9 +1,10 @@
 ﻿import {useQuery, useMutation, useInfiniteQuery, keepPreviousData} from '@tanstack/react-query';
 import {getRecipes, getRecipeById, postRecipeAnalysis} from '../api/recipeApi';
 import {handleValidationError} from '@/errors';
-import {CreateRecipeAnalysisRequestDto, GetAllRecipesRequestDto} from '../api/dto';
+import {GetAllRecipesRequestDto} from '../api/dto';
 import {router} from 'expo-router';
 import axios from 'axios';
+import { ImagePickerAsset } from 'expo-image-picker';
 
 type UseGetAllRecipesParams = Omit<GetAllRecipesRequestDto, 'page'>;
 
@@ -33,7 +34,7 @@ export const useGetRecipeById = (id: string) => {
 }
 export const useCreateRecipeAnalysis = () => {
     return useMutation({
-        mutationFn: (payload: CreateRecipeAnalysisRequestDto) => postRecipeAnalysis(payload),
+        mutationFn: (assets: ImagePickerAsset[]) => postRecipeAnalysis(assets),
         onSuccess: (analysisId) => {
             console.log('Post created successfully:', analysisId);
 

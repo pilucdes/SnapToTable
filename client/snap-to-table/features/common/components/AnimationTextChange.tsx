@@ -4,7 +4,7 @@ import {useEffect, useRef, useState} from "react";
 import {shuffle} from "@/utils/array";
 
 interface AnimationTextChangeProps {
-    content: AnimationTextContent[]
+    textContent: AnimationTextContent[]
     shuffleContent?: boolean
     style?: StyleProp<TextStyle>
 }
@@ -14,19 +14,20 @@ interface AnimationTextContent {
     duration: number
 }
 
-export const AnimationTextChange = ({content, style, shuffleContent = false}: AnimationTextChangeProps) => {
+export const AnimationTextChange = ({textContent, style, shuffleContent = false}: AnimationTextChangeProps) => {
 
     const [textToDisplay, setTextToDisplay] = useState("");
     const textOpacity = useRef(new Animated.Value(1)).current;
     const scheduleTextAnimations = () => {
 
         if (shuffleContent) {
-            shuffle(content)
+            shuffle(textContent)
         }
 
         let timeoutIds = [];
         let delay = 0;
-        for (let i = 0; i < content.length; i++) {
+        
+        for (const content of textContent) {
 
             const timeoutId = setTimeout(() => {
 
@@ -36,39 +37,39 @@ export const AnimationTextChange = ({content, style, shuffleContent = false}: An
                     useNativeDriver: true,
                     easing: Easing.ease,
                 }).start(() => {
-                    
-                    setTextToDisplay(content[i].value);
-                    
+
+                    setTextToDisplay(content.value);
+
                     Animated.timing(textOpacity, {
                         toValue: 1,
                         duration: 150,
                         useNativeDriver: true,
                         easing: Easing.ease,
                     }).start();
-                    
+
                 });
 
             }, delay);
 
             timeoutIds.push(timeoutId);
 
-            delay += content[i].duration;
+            delay += content.duration;
         }
 
         return timeoutIds;
     }
 
     useEffect(() => {
-        if (content.length <= 1) return;
+        if (textContent.length <= 1) return;
 
         const timeoutIds = scheduleTextAnimations();
         return () => {
             timeoutIds.forEach(id => clearTimeout(id));
         }
-    }, [content]);
-    
+    }, [textContent]);
 
-    if (content.length === 0) {
+
+    if (textContent.length === 0) {
         return null;
     }
 

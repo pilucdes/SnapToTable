@@ -3,7 +3,6 @@ import tw from "@/lib/tailwind"
 import {recipeCreationTitles, recipeCreationIcons} from "@/features/recipes/constants/animationConstants";
 import {useCreateRecipeAnalysis} from "../features/recipes/hooks/useRecipe";
 import {useRecipeImagePicker} from "@/features/recipes/hooks/useRecipeImagePicker";
-import {CreateRecipeAnalysisRequestDto} from "@/features/recipes/api/dto";
 import {
     Icon,
     ThemeButton,
@@ -22,27 +21,13 @@ export default function HomeScreen() {
     const {snapImages} = useRecipeImagePicker();
     const handleSnapPress = async () => {
 
-        const imageAsset = await snapImages();
+        const imageAssets = await snapImages();
 
-        if (imageAsset && imageAsset.length > 0) {
-            try {
-
-                const imagesBlob = await Promise.all(imageAsset.map(async (asset) => {
-                    const response = await fetch(asset.uri);
-                    return await response.blob();
-                }));
-
-                const payload: CreateRecipeAnalysisRequestDto = {
-                    images: imagesBlob
-                };
-
-                createRecipeAnalysis(payload);
-
-            } catch (err) {
-                console.error(err);
+        if (imageAssets && imageAssets.length > 0) {
+            if (imageAssets.length > 0) {
+                createRecipeAnalysis(imageAssets);
             }
         }
-
     }
 
     const previousRecipesPress = () => {
@@ -61,17 +46,17 @@ export default function HomeScreen() {
                     <View style={tw`mb-8 gap-3`}>
                         {isPending ?
                             <>
-                                <AnimationTextChange style={tw`text-4xl font-semibold text-center`}
-                                                     content={recipeCreationTitles}/>
-                                <AnimationTextChange style={tw`text-5xl font-semibold text-center`}
-                                                     content={recipeCreationIcons} shuffleContent={true}/>
+                                <AnimationTextChange style={tw`text-4xl text-center leading-tight`}
+                                                     textContent={recipeCreationTitles}/>
+                                <AnimationTextChange style={tw`text-5xl text-center leading-tight`}
+                                                     textContent={recipeCreationIcons} shuffleContent={true}/>
                             </> :
-                            <ThemeText variant="title" style={tw`text-4xl font-semibold text-center`}>
+                            <ThemeText variant="title" style={tw`text-4xl text-center`}>
                                 Any new recipe needed for today ?
                             </ThemeText>}
                     </View>
                 </AnimationEaseIn>
-                
+
                 <AnimationEaseIn delay={200}>
                     <ThemeButton
                         disabled={isPending}
