@@ -1,6 +1,6 @@
-﻿import {useQuery, useMutation, useInfiniteQuery} from '@tanstack/react-query';
+﻿import {useQuery, useMutation, useInfiniteQuery, keepPreviousData} from '@tanstack/react-query';
 import {getRecipes, getRecipeById, postRecipeAnalysis} from '../api/recipeApi';
-import { handleValidationError } from '@/errors';
+import {handleValidationError} from '@/errors';
 import {CreateRecipeAnalysisRequestDto, GetAllRecipesRequestDto} from '../api/dto';
 import {router} from 'expo-router';
 import axios from 'axios';
@@ -21,6 +21,7 @@ export const useGetAllRecipes = ({recipeAnalysisId, filter, pageSize}: UseGetAll
                 return params.page + 1;
             }
         },
+        placeholderData: keepPreviousData,
         initialPageParam: 1
     });
 }

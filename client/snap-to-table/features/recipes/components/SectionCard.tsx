@@ -10,7 +10,7 @@ interface SectionCardProps {
 
 export const SectionCard = ({title, children, style}: SectionCardProps) => {
 
-    const baseStyle = tw.style(`p-4 rounded-xl shadow-sm`);
+    const baseStyle = tw.style(`p-4`);
 
     return (
         <View style={[baseStyle, style]}>

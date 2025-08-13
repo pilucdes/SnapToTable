@@ -11,6 +11,7 @@ import {ThemeTextInput} from "@/features/common/components";
 
 const RECIPE_PAGE_SIZE = 5;
 const RECIPE_SEARCH_DELAY = 300;
+
 export default function RecipesScreen() {
 
     const {recipeAnalysisId} = useLocalSearchParams<{ recipeAnalysisId: string }>();
@@ -21,7 +22,6 @@ export default function RecipesScreen() {
     const {
         data,
         error,
-        isLoading,
         isFetchingNextPage,
         hasNextPage,
         fetchNextPage,
@@ -57,12 +57,6 @@ export default function RecipesScreen() {
         </AnimationEaseIn>
     ), []);
 
-    if (isLoading) {
-        return (
-            <ThemeAreaViewLoading/>
-        );
-    }
-
     return (
         <ThemeAreaView style={tw`flex items-center justify-center`}>
 
@@ -78,10 +72,9 @@ export default function RecipesScreen() {
             }
 
             <FlatList
-                key={debounceText}
                 data={recipes}
                 renderItem={renderItem}
-                keyExtractor={(item) => item.id}
+                keyExtractor={(item, index) => `${item.id}-${index}`}
                 contentContainerStyle={listContainerStyles}
                 onEndReached={handleLoadMore}
                 onEndReachedThreshold={0.5}

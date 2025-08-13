@@ -18,7 +18,6 @@ const variants = {
     label: commonStyle,
     primary: `bg-[${colorTheme.primary}] shadow-lg ${commonStyle}`,
     subtilePrimary: `bg-[${applyOpacityToHex(colorTheme.primary,0.5)}] shadow-lg ${commonStyle}`
-
 };
 
 type ButtonVariant = keyof typeof variants;

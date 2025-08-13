@@ -24,7 +24,7 @@ export const RecipeCard = ({recipe}: RecipeCardProps) => {
                 colors={[colorTheme.primary, applyOpacityToHex(colorTheme.primary, 0.80)]}
                 start={{x: 0, y: 0}}
                 end={{x: 0.2, y: 1}}
-                style={tw`w-80 md:w-180 rounded-xl shadow-lg overflow-hidden md:flex-row`}
+                style={tw`w-80 md:w-180 rounded-xl overflow-hidden md:flex-row`}
             >
 
                 <RecipeImage url={recipe.url}

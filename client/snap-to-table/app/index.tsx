@@ -71,8 +71,7 @@ export default function HomeScreen() {
                             </ThemeText>}
                     </View>
                 </AnimationEaseIn>
-
-
+                
                 <AnimationEaseIn delay={200}>
                     <ThemeButton
                         disabled={isPending}

@@ -22,7 +22,6 @@ export const ThemeTextInput = ({value, onChangeText, placeholder, style}: ThemeT
             value={value}
             onChangeText={onChangeText}
             clearButtonMode="while-editing"
-            autoFocus={true}
         />
     );
 }
