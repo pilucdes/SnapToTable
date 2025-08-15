@@ -2,11 +2,11 @@
 
 A full-stack application that uses AI to extract recipe information from food images. Built with React Native (Expo) for the mobile frontend and .NET 8 for the backend API.
 
-> **Portfolio Project** 🎯 This project was created as part of my learning journey to master **React Native** and **Clean Architecture** principles. It serves as a practical demonstration of modern mobile development practices, clean code organization, and full-stack application design.
+> **Portfolio Project** 🎯 This project was created as part of my learning journey with **React Native** and **Clean Architecture** principles. It serves as a practical demonstration of modern mobile development practices, clean code organization, and full-stack application design.
 
 ## 🎬 Demo
 
-### Quick Preview (GIF)
+### Quick Preview
 ![SnapToTable Demo](https://raw.githubusercontent.com/pilouk/PublicMedia/refs/heads/main/snap-to-table/snap-to-table-showcase.gif)
 
 ### Full Demo Video
