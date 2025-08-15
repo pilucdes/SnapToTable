@@ -198,5 +198,5 @@ This project is licensed under the MIT License.
 - **Async Image Generation**: Background processing for multiple images
 
 ### 🤖 **4. Specialized LLM Integration**
-- **Domain-Specific Models**: Fine-tuned models for recipe extraction
-- **Local LLM Options**: On-device processing for privacy and speed
+- **Domain-Specific Models**: Fine-tuned models for recipe extraction and image generation
+- **Self-Hosted Options**: Self-hosted llm for speed
