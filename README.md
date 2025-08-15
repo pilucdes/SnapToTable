@@ -17,9 +17,9 @@ A full-stack application that uses AI to extract recipe information from food im
 ## 🚀 Features
 
 - **AI-Powered Recipe Extraction**: Upload food images and automatically extract recipe details
-- **Cross-Platform Mobile App**: Built with React Native and Expo for iOS and Android
+- **Cross-Platform Mobile App**: Built with React Native and Expo for Web, iOS and Android
 - **Modern Backend**: Clean Architecture with .NET 8, CQRS, and MongoDB
-- **Recipe Management**: Store, organize, and browse extracted recipes
+- **Recipe Management**: Browse and search extracted recipes
 - **Responsive UI**: Beautiful, theme-aware interface with Tailwind CSS
 
 ## 🏗️ Architecture
@@ -174,13 +174,6 @@ The mobile app includes a comprehensive component library:
 - `OpenAi__Model`: Model to use (default: gpt-4.1)
 - `OpenAi__ImageModel`: Pmage gen. model to use (default: dall-e-3)
 - `OpenAi__ImageSize`: Image gen. size (default: 1024x1024)
-- 
-## 📱 Mobile App Features
-
-- **Recipe Browsing**: View all extracted recipes
-- **Image Upload**: Select images from gallery or camera
-- **Recipe Details**: View full recipe information
-- **Theme Support**: Light/dark mode with custom theming
 
 ## 📄 License
 
