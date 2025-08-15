@@ -166,10 +166,15 @@ The mobile app includes a comprehensive component library:
 ## 🔐 Configuration
 
 ### Environment Variables
-- `MongoDb__ConnectionString`: MongoDB connection string
-- `OpenAi__ApiKey`: OpenAI API key for recipe extraction
-- `OpenAi__Model`: OpenAI model to use (default: gpt-4-vision-preview)
-
+- `MongoDb__ConnectionString`: Connection string
+- `MongoDb__DatabaseName`: Database name
+- `MongoDb__UseTls`: (default: true)
+- `OpenAi__ApiKey`: API key for recipe extraction
+- `OpenAi__Token`: Maximum number of tokens allowed for the generated answer (default:4096)
+- `OpenAi__Model`: Model to use (default: gpt-4.1)
+- `OpenAi__ImageModel`: Pmage gen. model to use (default: dall-e-3)
+- `OpenAi__ImageSize`: Image gen. size (default: 1024x1024)
+- 
 ## 📱 Mobile App Features
 
 - **Recipe Browsing**: View all extracted recipes
