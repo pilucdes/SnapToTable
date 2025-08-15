@@ -37,7 +37,7 @@ A full-stack application that uses AI to extract recipe information from food im
 - **Database**: MongoDB with repository pattern
 - **AI Integration**: OpenAI API for recipe extraction
 - **Validation**: FluentValidation with behavior pipeline
-- **Documentation**: OpenAPI/Swagger with Scalar
+- **Documentation**: OpenAPI with Scalar
 
 ## 📱 Mobile App Structure
 
