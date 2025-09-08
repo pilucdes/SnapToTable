@@ -1,0 +1,45 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: src/SnapToTable.API/Dockerfile
+    image: snaptotable-api:latest
+    container_name: snaptotable-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://0.0.0.0:8080
+      - MongoDbSettings__ConnectionString=mongodb://mongo:27017
+      - MongoDbSettings__DatabaseName=snaptotable
+      - MongoDbSettings__UseTls=false
+      - MongoDbSettings__AllowInsecureTls=true
+      - OpenAI__ApiKey=${OPENAI_API_KEY}
+    ports:
+      - "5261:8080"
+    depends_on:
+      - mongo
+
+  client:
+    build:
+      context: .
+      dockerfile: client/snap-to-table/Dockerfile
+    image: snaptotable-client:latest
+    container_name: snaptotable-client
+    environment:
+      - EXPO_PUBLIC_API_BASE_URL=http://localhost:5261
+    ports:
+      - "8081:8081"
+    depends_on:
+      - api
+
+  mongo:
+    image: mongo:7
+    container_name: snaptotable-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
+
+

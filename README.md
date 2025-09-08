@@ -117,6 +117,19 @@ src/
 
 4. Use Expo Go app or run on simulator/emulator
 
+## 🐋 Docker Setup
+1. Create an .env file containing the variable "OPENAI_API_KEY" and the key value e.g. :
+   ```
+   OPENAI_API_KEY=YOURKEY
+   ```
+2. Run docker compose 
+   ```
+   docker compose up
+   ```
+3. API documentation available at http://localhost:5261/scalar
+
+4. Application available at http://localhost:8081
+
 ## 📋 API Endpoints
 
 - `GET /api/v1/recipes` - Get all recipes with pagination

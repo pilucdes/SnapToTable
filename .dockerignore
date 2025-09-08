@@ -1,0 +1,17 @@
+**/bin/
+**/obj/
+**/.vs/
+**/.idea/
+**/.vscode/
+**/node_modules/
+**/TestResults/
+*.user
+*.suo
+*.swp
+*.DS_Store
+*.env
+**/client/snap-to-table/.expo/
+**/client/snap-to-table/android/
+**/client/snap-to-table/ios/
+
+
