@@ -1,16 +1,16 @@
 # SnapToTable 🍳📱
 
-A full-stack application that uses AI to extract recipe information from food images. Built with React Native (Expo) for the mobile frontend and .NET 8 for the backend API.
+A full-stack application that uses AI to extract recipe information from food images. Built with React Native (Expo) for the mobile frontend and .NET 9 for the backend API.
 
 > **Portfolio Project** 🎯 This project was created as part of my learning journey with **React Native** and **Clean Architecture** principles. It serves as a practical demonstration of modern mobile development practices, clean code organization, and full-stack application design.
 
 ## 🎬 Demo
 
 ### Quick Preview
-![SnapToTable Demo](https://raw.githubusercontent.com/pilouk/PublicMedia/refs/heads/main/snap-to-table/snap-to-table-showcase.gif)
+![SnapToTable Demo](https://raw.githubusercontent.com/pilucdes/PublicMedia/refs/heads/main/snap-to-table/snap-to-table-showcase.gif)
 
 ### Full Demo Video
-📱 **[Watch Full Demo Video](https://raw.githubusercontent.com/pilouk/PublicMedia/refs/heads/main/snap-to-table/snap-to-table-showcase.mp4)**
+📱 **[Watch Full Demo Video](https://youtu.be/UFSeged0hVY)**
 
 ---
 
@@ -32,7 +32,7 @@ A full-stack application that uses AI to extract recipe information from food im
 - **UI Components**: Custom themed components with animations
 
 ### Backend (API)
-- **Framework**: .NET 8 Web API
+- **Framework**: .NET 9 Web API
 - **Architecture**: Clean Architecture with CQRS pattern
 - **Database**: MongoDB with repository pattern
 - **AI Integration**: OpenAI API for recipe extraction
@@ -62,28 +62,11 @@ src/
 └── SnapToTable.Infrastructure/ # Data access & external services
 ```
 
-## 🛠️ Technology Stack
-
-### Frontend
-- React Native 0.79.5
-- Expo SDK 53
-- TypeScript 5.8
-- Tailwind CSS
-- React Query (TanStack Query)
-- Expo Router
-
-### Backend
-- .NET 8
-- CQRS with MediatR
-- MongoDB
-- OpenAI API integration
-- FluentValidation
-
 ## 🚀 Getting Started
 
 ### Prerequisites
 - Node.js 18+ and npm
-- .NET 8 SDK
+- .NET 9 SDK
 - MongoDB instance
 - OpenAI API key
 - Expo CLI (`npm install -g @expo/cli`)
@@ -175,10 +158,6 @@ The mobile app includes a comprehensive component library:
 - `OpenAi__ImageModel`: Pmage gen. model to use (default: dall-e-3)
 - `OpenAi__ImageSize`: Image gen. size (default: 1024x1024)
 
-## 📄 License
-
-This project is licensed under the MIT License.
-
 ## 🚀 Future Improvements & Missing Features
 
 ### 🔐 **1. Authorization & User Management**
@@ -193,8 +172,6 @@ This project is licensed under the MIT License.
 
 ### ⚡ **3. Streaming & Async Processing**
 - **Streaming Content**: Progressive loading of recipe data
-- **Async Image Generation**: Background processing for multiple images
 
 ### 🤖 **4. Specialized LLM Integration**
 - **Domain-Specific Models**: Fine-tuned models for recipe extraction and image generation
-- **Self-Hosted Options**: Self-hosted llm for speed
